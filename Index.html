@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KOKSIX.PL — Minecraft Content Creator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        :root {
+            --bg-deep: #060310;
+            --bg-card: rgba(14, 9, 30, 0.7);
+            --bg-card-hover: rgba(20, 14, 45, 0.9);
+            --purple-primary: #8a2be2;
+            --purple-light: #a855f7;
+            --purple-dark: #6b21a8;
+            --purple-glow: rgba(139, 92, 246, 0.4);
+            --purple-subtle: rgba(139, 92, 246, 0.08);
+            --text-white: #ffffff;
+            --text-light: #c8c0dc;
+            --text-muted: #6b6080;
+            --emerald: #22c55e;
+            --emerald-glow: rgba(34, 197, 94, 0.4);
+            --glass-border: rgba(139, 92, 246, 0.15);
+            --glass-border-hover: rgba(139, 92, 246, 0.4);
+            --radius-xl: 24px;
+            --radius-lg: 18px;
+            --radius-md: 12px;
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--purple-primary) var(--bg-deep); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { background: var(--purple-primary); border-radius: 3px; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-white);
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .bg-grid {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image:
+                linear-gradient(rgba(139, 92, 246, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(139, 92, 246, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        .bg-orbs {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+        }
+
+        .bg-orb {
+            position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4;
+            animation: orbFloat 20s ease-in-out infinite;
+        }
+
+        .bg-orb:nth-child(1) {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.3), transparent 70%);
+            top: -10%; right: -5%; animation-delay: 0s;
+        }
+        .bg-orb:nth-child(2) {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.2), transparent 70%);
+            bottom: 10%; left: -5%; animation-delay: -7s; animation-duration: 25s;
+        }
+        .bg-orb:nth-child(3) {
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(109, 40, 217, 0.25), transparent 70%);
+            top: 40%; left: 30%; animation-delay: -14s; animation-duration: 30s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -40px) scale(1.05); }
+            50% { transform: translate(-20px, 20px) scale(0.95); }
+            75% { transform: translate(40px, 30px) scale(1.02); }
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 9999;
+            background: rgba(6, 3, 16, 0.7);
+            backdrop-filter: blur(24px) saturate(1.5);
+            -webkit-backdrop-filter: blur(24px) saturate(1.5);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.08);
+            transition: all 0.5s var(--ease-out-expo);
+        }
+        .navbar.scrolled {
+            background: rgba(6, 3, 16, 0.95);
+            box-shadow: 0 1px 40px rgba(0,0,0,0.5), 0 0 1px rgba(139, 92, 246, 0.2);
+        }
+        .nav-inner {
+            max-width: 1280px; margin: 0 auto; padding: 0 28px; height: 72px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .nav-logo {
+            font-family: 'Press Start 2P', monospace; font-size: 12px; color: var(--text-white);
+            text-decoration: none; letter-spacing: 1px; display: flex; align-items: center; gap: 8px;
+            cursor: pointer;
+        }
+        .nav-logo .logo-icon {
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg, var(--purple-primary), var(--purple-light));
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            font-size: 14px; box-shadow: 0 0 15px var(--purple-glow);
+        }
+
+        /* ===== TAB NAVIGATION ===== */
+        .nav-tabs {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            position: relative;
+        }
+
+        .nav-tab {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            transition: all 0.3s var(--ease-out-expo);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .nav-tab::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(168, 85, 247, 0.05));
+            border-radius: var(--radius-md);
+            opacity: 0;
+            transition: opacity 0.3s var(--ease-out-expo);
+        }
+
+        .nav-tab:hover {
+            color: var(--text-white);
+        }
+
+        .nav-tab:hover::before {
+            opacity: 1;
+        }
+
+        .nav-tab.active {
+            color: var(--text-white);
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(168, 85, 247, 0.1));
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.15), inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+
+        .nav-tab.active::before {
+            opacity: 1;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(168, 85, 247, 0.1));
+        }
+
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 2px;
+            background: var(--purple-light);
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--purple-glow), 0 0 20px rgba(139, 92, 246, 0.3);
+            animation: tabGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes tabGlow {
+            0%, 100% { box-shadow: 0 0 10px var(--purple-glow), 0 0 20px rgba(139, 92, 246, 0.3); width: 24px; }
+            50% { box-shadow: 0 0 15px var(--purple-glow), 0 0 30px rgba(139, 92, 246, 0.5); width: 32px; }
+        }
+
+        .nav-tab .tab-icon {
+            font-size: 14px;
+            transition: transform 0.3s var(--ease-spring);
+        }
+
+        .nav-tab:hover .tab-icon {
+            transform: scale(1.2);
+        }
+
+        .nav-tab.active .tab-icon {
+            text-shadow: 0 0 10px var(--purple-glow);
+        }
+
+        .nav-hamburger {
+            display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px;
+            border: none; background: none; z-index: 100;
+        }
+        .nav-hamburger span {
+            width: 22px; height: 2px; background: var(--text-white); border-radius: 2px;
+            transition: all 0.3s var(--ease-out-expo);
+        }
+        .nav-hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+        .nav-hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+        /* ===== TAB CONTENT ===== */
+        .tab-page {
+            display: none;
+            position: fixed;
+            inset: 0;
+            top: 72px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 1;
+        }
+
+        .tab-page.active {
+            display: block;
+        }
+
+        .tab-page.anim-in {
+            animation: pageSlideIn 0.6s var(--ease-out-expo) forwards;
+        }
+
+        .tab-page.anim-out {
+            animation: pageSlideOut 0.4s var(--ease-out-expo) forwards;
+        }
+
+        @keyframes pageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.98);
+                filter: blur(4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
+        @keyframes pageSlideOut {
+            from {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.98);
+                filter: blur(4px);
+            }
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: calc(100vh - 72px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 60px 24px;
+        }
+        #heroCanvas { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+        .hero-content {
+            position: relative; z-index: 2; display: flex; flex-direction: column;
+            align-items: center; text-align: center; max-width: 800px; width: 100%;
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px;
+            background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 50px; font-size: 12px; font-weight: 600; color: var(--purple-light);
+            margin-bottom: 28px;
+        }
+        .hero-badge .pulse-dot {
+            width: 6px; height: 6px; background: var(--emerald); border-radius: 50%;
+            animation: pulseDot 2s ease-in-out infinite;
+        }
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+            50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+        }
+        .hero-title {
+            font-family: 'Press Start 2P', monospace; font-size: clamp(32px, 7vw, 72px);
+            line-height: 1.35; margin-bottom: 20px;
+        }
+        .hero-title .gradient-text {
+            background: linear-gradient(135deg, var(--purple-light), #c084fc, var(--purple-primary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .hero-title .dot { -webkit-text-fill-color: var(--purple-light); text-shadow: 0 0 30px var(--purple-glow); }
+        .hero-desc {
+            font-size: 17px; color: var(--text-light); line-height: 1.8; margin-bottom: 40px;
+            max-width: 500px;
+        }
+        .hero-desc strong { color: var(--purple-light); font-weight: 700; }
+        .hero-buttons {
+            display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+        }
+        .btn {
+            display: inline-flex; align-items: center; gap: 10px; padding: 14px 30px;
+            border-radius: var(--radius-md); font-size: 13px; font-weight: 700; text-decoration: none;
+            transition: all 0.4s var(--ease-spring); cursor: pointer; border: none;
+            text-transform: uppercase; letter-spacing: 0.8px; position: relative; overflow: hidden;
+        }
+        .btn::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .btn:hover::before { opacity: 1; }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--purple-primary), var(--purple-light));
+            color: var(--text-white);
+            box-shadow: 0 4px 25px rgba(139, 92, 246, 0.35), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+        .btn-primary:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+        .btn-outline {
+            background: rgba(139, 92, 246, 0.08); color: var(--text-white);
+            border: 1.5px solid var(--glass-border); backdrop-filter: blur(10px);
+        }
+        .btn-outline:hover {
+            border-color: var(--glass-border-hover); background: rgba(139, 92, 246, 0.15);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.2);
+        }
+        .hero-scroll {
+            position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); z-index: 5;
+            animation: bounceDown 2.5s ease-in-out infinite;
+        }
+        .hero-scroll i { font-size: 18px; color: var(--purple-light); opacity: 0.5; }
+        @keyframes bounceDown {
+            0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.4; }
+            50% { transform: translateX(-50%) translateY(12px); opacity: 1; }
+        }
+
+        /* ===== SECTIONS ===== */
+        .section {
+            padding: 80px 24px; max-width: 1200px; margin: 0 auto;
+            position: relative; z-index: 2;
+        }
+        .section-label {
+            font-family: 'Press Start 2P', monospace; font-size: 9px; color: var(--purple-light);
+            letter-spacing: 4px; text-transform: uppercase; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .section-label::before, .section-label::after {
+            content: ''; flex: 1; height: 1px;
+            background: linear-gradient(90deg, var(--purple-primary), transparent);
+        }
+        .section-label::after { background: linear-gradient(270deg, var(--purple-primary), transparent); }
+        .section-title {
+            font-family: 'Press Start 2P', monospace; font-size: clamp(16px, 3vw, 24px);
+            line-height: 1.6; margin-bottom: 12px;
+        }
+        .section-subtitle {
+            color: var(--text-muted); font-size: 15px; max-width: 480px; line-height: 1.7;
+        }
+        .section-header { margin-bottom: 56px; }
+
+        /* ===== SOCIALE ===== */
+        .sociale-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+        }
+        .sociale-card {
+            background: var(--bg-card); border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg); padding: 30px 22px; text-align: center;
+            transition: all 0.4s var(--ease-spring); position: relative; overflow: hidden;
+            text-decoration: none; color: inherit; display: flex; flex-direction: column;
+            align-items: center; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        }
+        .sociale-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--purple-light), transparent);
+            opacity: 0; transition: opacity 0.4s;
+        }
+        .sociale-card::after {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.08) 0%, transparent 60%);
+            opacity: 0; transition: opacity 0.4s;
+        }
+        .sociale-card:hover {
+            transform: translateY(-8px); border-color: var(--glass-border-hover);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 0 30px var(--purple-glow);
+            background: var(--bg-card-hover);
+        }
+        .sociale-card:hover::before, .sociale-card:hover::after { opacity: 1; }
+        .sociale-card.disabled { pointer-events: none; opacity: 0.45; }
+        .sociale-card.disabled:hover {
+            transform: none; box-shadow: none; border-color: var(--glass-border);
+        }
+        .sociale-icon {
+            width: 60px; height: 60px; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center; font-size: 28px;
+            margin-bottom: 18px; transition: all 0.4s var(--ease-spring); position: relative; z-index: 1;
+        }
+        .sociale-card:hover .sociale-icon { transform: scale(1.1) rotate(-3deg); }
+        .sociale-name {
+            font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;
+            letter-spacing: 2px; margin-bottom: 6px; position: relative; z-index: 1;
+        }
+        .sociale-handle {
+            font-size: 15px; font-weight: 700; color: var(--text-white); margin-bottom: 14px;
+            position: relative; z-index: 1;
+        }
+        .sociale-count {
+            font-family: 'Press Start 2P', monospace; font-size: 14px; color: var(--purple-light);
+            margin-bottom: 18px; text-shadow: 0 0 15px var(--purple-glow); position: relative; z-index: 1;
+            min-height: 20px;
+        }
+        .sociale-count-label {
+            font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600;
+            color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;
+            margin-bottom: 14px; position: relative; z-index: 1;
+        }
+        .sociale-btn {
+            padding: 9px 24px; border-radius: var(--radius-sm); font-size: 11px; font-weight: 700;
+            color: var(--text-white); text-transform: uppercase; letter-spacing: 0.8px;
+            transition: all 0.3s var(--ease-spring); position: relative; z-index: 1;
+        }
+        .sociale-btn:hover { transform: scale(1.06); }
+        .card-tiktok .sociale-icon { background: rgba(255, 0, 80, 0.12); color: #ff0050; }
+        .card-tiktok .sociale-btn { background: linear-gradient(135deg, #ff0050, #00f2ea); }
+        .card-youtube .sociale-icon { background: rgba(255, 0, 0, 0.12); color: #ff0000; }
+        .card-youtube .sociale-btn { background: linear-gradient(135deg, #ff0000, #cc0000); }
+        .card-discord .sociale-icon { background: rgba(88, 101, 242, 0.12); color: #5865f2; }
+        .card-discord .sociale-btn { background: linear-gradient(135deg, #5865f2, #4752c4); }
+        .card-instagram .sociale-icon { background: rgba(225, 48, 108, 0.12); color: #e1306c; }
+        .card-twitch .sociale-icon { background: rgba(145, 70, 255, 0.12); color: #9146ff; }
+        .card-server .sociale-icon { background: rgba(34, 197, 94, 0.12); color: #22c55e; }
+        .badge-soon {
+            display: inline-flex; align-items: center; gap: 6px; padding: 6px 16px;
+            background: rgba(139, 92, 246, 0.08); border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: 50px; font-size: 11px; font-weight: 700; color: var(--purple-light);
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .badge-soon i { animation: blink 1.5s ease-in-out infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+        .loading-spinner {
+            display: inline-block; width: 16px; height: 16px;
+            border: 2px solid rgba(168, 85, 247, 0.2); border-top-color: var(--purple-light);
+            border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .fetch-fallback {
+            font-family: 'Inter', sans-serif; font-size: 11px; color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .total-counter {
+            text-align: center; margin-top: 48px; padding: 36px;
+            background: var(--bg-card); border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl); max-width: 400px; margin-left: auto; margin-right: auto;
+            backdrop-filter: blur(12px); position: relative; overflow: hidden;
+        }
+        .total-counter::before {
+            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 60%; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--purple-light), transparent);
+        }
+        .total-counter i {
+            font-size: 32px; color: var(--purple-light); margin-bottom: 12px;
+            text-shadow: 0 0 20px var(--purple-glow);
+        }
+        .total-counter-label { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; }
+        .total-counter-value {
+            font-family: 'Press Start 2P', monospace; font-size: 30px; color: var(--purple-light);
+            text-shadow: 0 0 25px var(--purple-glow);
+        }
+
+        .discord-counter {
+            text-align: center; margin-top: 20px; padding: 24px;
+            background: var(--bg-card); border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg); max-width: 400px; margin-left: auto; margin-right: auto;
+            backdrop-filter: blur(12px); position: relative; overflow: hidden;
+        }
+        .discord-counter::before {
+            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 60%; height: 1px;
+            background: linear-gradient(90deg, transparent, #5865f2, transparent);
+        }
+        .discord-counter i {
+            font-size: 28px; color: #5865f2; margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(88, 101, 242, 0.4);
+        }
+        .discord-counter-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
+        .discord-counter-value {
+            font-family: 'Press Start 2P', monospace; font-size: 24px; color: #5865f2;
+            text-shadow: 0 0 20px rgba(88, 101, 242, 0.4);
+        }
+
+        /* ===== ABOUT ===== */
+        .about-container {
+            max-width: 700px; margin: 0 auto; text-align: center;
+        }
+        .about-text-center h3 {
+            font-size: 22px; font-weight: 800; margin-bottom: 18px; line-height: 1.4;
+        }
+        .about-text-center h3 span {
+            background: linear-gradient(135deg, var(--purple-light), #c084fc);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .about-text-center p {
+            color: var(--text-light); font-size: 15px; line-height: 1.9; margin-bottom: 36px;
+            max-width: 600px; margin-left: auto; margin-right: auto;
+        }
+        .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .about-stat {
+            display: flex; align-items: center; gap: 14px; padding: 16px 18px;
+            background: var(--bg-card); border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md); transition: all 0.4s var(--ease-spring);
+            backdrop-filter: blur(8px);
+        }
+        .about-stat:hover {
+            border-color: var(--glass-border-hover); box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
+            transform: translateY(-3px);
+        }
+        .about-stat i {
+            font-size: 20px; color: var(--purple-light); width: 24px; text-align: center;
+            text-shadow: 0 0 10px var(--purple-glow);
+        }
+        .about-stat .stat-label {
+            font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;
+        }
+        .about-stat .stat-value { font-size: 13px; color: var(--text-white); font-weight: 600; margin-top: 2px; }
+
+        /* ===== KONTAKT GRID ===== */
+        .kontakt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .kontakt-card {
+            background: var(--bg-card); border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg); padding: 30px 26px;
+            transition: all 0.4s var(--ease-spring); backdrop-filter: blur(10px);
+            position: relative; overflow: hidden;
+        }
+        .kontakt-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--purple-light), transparent);
+            opacity: 0; transition: opacity 0.4s;
+        }
+        .kontakt-card:hover {
+            border-color: var(--glass-border-hover);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 20px var(--purple-glow);
+            transform: translateY(-4px);
+        }
+        .kontakt-card:hover::before { opacity: 1; }
+        .kontakt-card-title {
+            font-family: 'Press Start 2P', monospace; font-size: 9px; color: var(--purple-light);
+            margin-bottom: 20px; display: flex; align-items: center; gap: 10px; letter-spacing: 1px;
+        }
+        .kontakt-card-title i { font-size: 16px; }
+        .contact-items { display: flex; flex-direction: column; gap: 14px; }
+        .contact-item {
+            display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--text-light);
+        }
+        .contact-item i { color: var(--purple-light); width: 20px; text-align: center; font-size: 16px; }
+        .contact-item strong { color: var(--text-white); }
+        .btn-email {
+            display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; padding: 11px 22px;
+            background: linear-gradient(135deg, var(--purple-primary), var(--purple-light));
+            color: var(--text-white); text-decoration: none; border-radius: var(--radius-sm);
+            font-size: 12px; font-weight: 700; transition: all 0.4s var(--ease-spring);
+            border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .btn-email:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4); }
+        .domain-name {
+            font-family: 'Press Start 2P', monospace; font-size: 16px; margin-bottom: 14px;
+            background: linear-gradient(135deg, var(--purple-light), #c084fc);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .domain-text { color: var(--text-light); font-size: 14px; line-height: 1.7; margin-bottom: 20px; }
+        .btn-domain {
+            display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px;
+            background: rgba(139, 92, 246, 0.1); border: 1.5px solid var(--glass-border);
+            color: var(--text-white); text-decoration: none; border-radius: var(--radius-sm);
+            font-size: 12px; font-weight: 700; transition: all 0.4s var(--ease-spring);
+            cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .btn-domain:hover {
+            border-color: var(--glass-border-hover); background: rgba(139, 92, 246, 0.2);
+            box-shadow: 0 0 20px var(--purple-glow); transform: translateY(-3px);
+        }
+        .server-badge-green {
+            display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px;
+            background: rgba(34, 197, 94, 0.08); border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 50px; font-size: 11px; font-weight: 700; color: var(--emerald); margin-bottom: 16px;
+        }
+        .server-badge-green .dot {
+            width: 6px; height: 6px; background: var(--emerald); border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+        }
+        .server-text { color: var(--text-light); font-size: 14px; line-height: 1.7; margin-bottom: 20px; }
+        .server-text strong { color: var(--emerald); }
+        .btn-server {
+            display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px;
+            background: linear-gradient(135deg, #22c55e, #16a34a); color: var(--text-white);
+            text-decoration: none; border-radius: var(--radius-sm); font-size: 12px; font-weight: 700;
+            transition: all 0.4s var(--ease-spring); border: none; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .btn-server:hover { transform: translateY(-3px); box-shadow: 0 8px 25px var(--emerald-glow); }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: rgba(3, 1, 8, 0.95); border-top: 1px solid var(--glass-border);
+            padding: 24px; position: relative; z-index: 2;
+        }
+        .footer-inner { max-width: 1200px; margin: 0 auto; text-align: center; }
+        .footer-bottom p { color: var(--text-muted); font-size: 12px; }
+        .footer-bottom a { color: var(--purple-light); text-decoration: none; font-weight: 700; }
+        .footer-bottom a:hover { text-decoration: underline; }
+
+        /* ===== TAB TRANSITION OVERLAY ===== */
+        .tab-transition-overlay {
+            position: fixed;
+            inset: 0;
+            top: 72px;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tab-transition-overlay.active {
+            opacity: 1;
+        }
+
+        .tab-transition-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--purple-light), transparent);
+            transform: scaleX(0);
+            transition: transform 0.6s var(--ease-out-expo);
+        }
+
+        .tab-transition-overlay.animating::before {
+            transform: scaleX(1);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .sociale-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .nav-tabs {
+                display: none;
+                position: fixed;
+                top: 72px;
+                left: 0;
+                width: 100%;
+                background: rgba(6, 3, 16, 0.97);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 16px;
+                border-bottom: 1px solid var(--glass-border);
+                gap: 4px;
+            }
+            .nav-tabs.open { display: flex; }
+            .nav-tab { padding: 14px 18px; font-size: 14px; border-radius: 10px; justify-content: flex-start; }
+            .nav-tab::after { display: none !important; }
+            .nav-hamburger { display: flex; }
+            .hero { padding: 60px 20px 50px; }
+            .hero-title { font-size: clamp(24px, 8vw, 40px); }
+            .sociale-grid { grid-template-columns: 1fr; max-width: 360px; margin: 0 auto; }
+            .about-stats { grid-template-columns: 1fr; }
+            .kontakt-grid { grid-template-columns: 1fr; }
+            .section { padding: 60px 20px; }
+            .bg-orb { opacity: 0.2; }
+        }
+        @media (max-width: 480px) {
+            .hero-buttons { flex-direction: column; width: 100%; max-width: 280px; margin: 0 auto; }
+            .btn { justify-content: center; width: 100%; }
+            .total-counter-value { font-size: 22px; }
+            .discord-counter-value { font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+    <div class="bg-orbs">
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+    </div>
+
+    <div class="tab-transition-overlay" id="tabOverlay"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-inner">
+            <div class="nav-logo" id="logoBtn">
+                <div class="logo-icon"><i class="fas fa-cube"></i></div>
+                KOKSIX<span style="color:var(--purple-light)">.PL</span>
+            </div>
+            <div class="nav-tabs" id="navTabs">
+                <button class="nav-tab active" data-tab="home">
+                    <i class="fas fa-home tab-icon"></i>
+                    Strona Główna
+                </button>
+                <button class="nav-tab" data-tab="sociale">
+                    <i class="fas fa-share-alt tab-icon"></i>
+                    Sociale
+                </button>
+                <button class="nav-tab" data-tab="omnie">
+                    <i class="fas fa-user tab-icon"></i>
+                    O Mnie
+                </button>
+                <button class="nav-tab" data-tab="kontakt">
+                    <i class="fas fa-envelope tab-icon"></i>
+                    Kontakt
+                </button>
+            </div>
+            <button class="nav-hamburger" id="navToggle" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ==================== TAB: STRONA GŁÓWNA ==================== -->
+    <div class="tab-page active" id="tab-home">
+        <section class="hero">
+            <canvas id="heroCanvas"></canvas>
+            <div class="hero-content">
+                <div class="hero-badge"><span class="pulse-dot"></span> Witaj na mojej stronie!</div>
+                <h1 class="hero-title">
+                    <span class="gradient-text">KOKSIX</span><span class="dot">.PL</span>
+                </h1>
+                <p class="hero-desc">
+                    Tworzę treści ze świata <strong>Minecrafta</strong> i nie tylko!<br>
+                    Poradniki, ciekawostki, hardcore, wyzwania i wiele więcej.
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="switchTab('sociale')">
+                        <i class="fas fa-share-alt"></i> Zobacz Sociale
+                    </button>
+                    <button class="btn btn-outline" onclick="switchTab('omnie')">
+                        <i class="fas fa-user"></i> O Mnie
+                    </button>
+                </div>
+            </div>
+            <div class="hero-scroll"><i class="fas fa-chevron-down"></i></div>
+        </section>
+    </div>
+
+    <!-- ==================== TAB: SOCIALE ==================== -->
+    <div class="tab-page" id="tab-sociale">
+        <section class="section">
+            <div class="section-header">
+                <div class="section-label"><span>Moje Sociale</span></div>
+                <h2 class="section-title">Znajdź mnie w sieci</h2>
+                <p class="section-subtitle">Dołącz do społeczności i bądź na bieżąco z najnowszymi treściami!</p>
+            </div>
+
+            <div class="sociale-grid">
+                <a href="https://www.tiktok.com/@koksixx_" target="_blank" rel="noopener" class="sociale-card card-tiktok" id="cardTiktok">
+                    <div class="sociale-icon"><i class="fab fa-tiktok"></i></div>
+                    <div class="sociale-name">TikTok</div>
+                    <div class="sociale-handle">@koksixx_</div>
+                    <div class="sociale-count" id="tiktokCountBox">
+                        <span class="counter-num" id="tiktokCount"><span class="loading-spinner"></span></span>
+                    </div>
+                    <div class="sociale-count-label">obserwujących</div>
+                    <span class="sociale-btn">Obserwuj</span>
+                </a>
+
+                <a href="https://www.youtube.com/@koksix_99" target="_blank" rel="noopener" class="sociale-card card-youtube" id="cardYoutube">
+                    <div class="sociale-icon"><i class="fab fa-youtube"></i></div>
+                    <div class="sociale-name">YouTube</div>
+                    <div class="sociale-handle">@koksix_99</div>
+                    <div class="sociale-count" id="youtubeCountBox">
+                        <span class="counter-num" id="youtubeCount"><span class="loading-spinner"></span></span>
+                    </div>
+                    <div class="sociale-count-label">subskrybentów</div>
+                    <span class="sociale-btn">Subskrybuj</span>
+                </a>
+
+                <a href="https://discord.gg/axEau9f3" target="_blank" rel="noopener" class="sociale-card card-discord" id="cardDiscord">
+                    <div class="sociale-icon"><i class="fab fa-discord"></i></div>
+                    <div class="sociale-name">Discord</div>
+                    <div class="sociale-handle">Koksix Community</div>
+                    <div class="sociale-count" id="discordCountBox">
+                        <span class="counter-num" id="discordCount"><span class="loading-spinner"></span></span>
+                    </div>
+                    <div class="sociale-count-label">członków</div>
+                    <span class="sociale-btn">Dołącz</span>
+                </a>
+
+                <div class="sociale-card card-instagram disabled">
+                    <div class="sociale-icon"><i class="fab fa-instagram"></i></div>
+                    <div class="sociale-name">Instagram</div>
+                    <div class="sociale-handle">@koksix.pl</div>
+                    <div class="sociale-count"><span class="badge-soon"><i class="fas fa-clock"></i> Wkrótce</span></div>
+                    <div class="sociale-count-label"></div>
+                    <span class="sociale-btn" style="opacity:0.4;">Wkrótce</span>
+                </div>
+
+                <div class="sociale-card card-twitch disabled">
+                    <div class="sociale-icon"><i class="fab fa-twitch"></i></div>
+                    <div class="sociale-name">Twitch</div>
+                    <div class="sociale-handle">@koksix.pl</div>
+                    <div class="sociale-count"><span class="badge-soon"><i class="fas fa-clock"></i> Wkrótce</span></div>
+                    <div class="sociale-count-label"></div>
+                    <span class="sociale-btn" style="opacity:0.4;">Wkrótce</span>
+                </div>
+
+                <div class="sociale-card card-server disabled">
+                    <div class="sociale-icon"><i class="fas fa-cube"></i></div>
+                    <div class="sociale-name">Serwer MC</div>
+                    <div class="sociale-handle">koksix.icsv.pl</div>
+                    <div class="sociale-count"><span class="badge-soon"><i class="fas fa-clock"></i> Wkrótce</span></div>
+                    <div class="sociale-count-label"></div>
+                    <span class="sociale-btn" style="opacity:0.4;">Wkrótce</span>
+                </div>
+            </div>
+
+            <div class="total-counter">
+                <i class="fas fa-users"></i>
+                <div class="total-counter-label">Łączna liczba obserwujących</div>
+                <div class="total-counter-value" id="totalCount">0</div>
+            </div>
+
+            <div class="discord-counter">
+                <i class="fab fa-discord"></i>
+                <div class="discord-counter-label">Członkowie serwera Discord</div>
+                <div class="discord-counter-value" id="discordTotal">0</div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ==================== TAB: O MNIE ==================== -->
+    <div class="tab-page" id="tab-omnie">
+        <section class="section">
+            <div class="section-header">
+                <div class="section-label"><span>O Mnie</span></div>
+                <h2 class="section-title">Cześć! Jestem Koksix</h2>
+            </div>
+            <div class="about-container">
+                <div class="about-text-center">
+                    <h3>Tworzę treści związane z <span>Minecraftem</span></h3>
+                    <p>Poradniki, ciekawostki, hardcore, wyzwania i wiele więcej! Stawiam na jakość, dobrą zabawę i świetną społeczność. Dzięki, że jesteś tutaj! ✨</p>
+                    <div class="about-stats">
+                        <div class="about-stat">
+                            <i class="fas fa-gamepad"></i>
+                            <div><div class="stat-label">Pasja</div><div class="stat-value">Minecraft</div></div>
+                        </div>
+                        <div class="about-stat">
+                            <i class="fas fa-heart"></i>
+                            <div><div class="stat-label">Społeczność</div><div class="stat-value">Najważniejsza!</div></div>
+                        </div>
+                        <div class="about-stat">
+                            <i class="fas fa-trophy"></i>
+                            <div><div class="stat-label">Doświadczenie</div><div class="stat-value">Od 2018 roku</div></div>
+                        </div>
+                        <div class="about-stat">
+                            <i class="fas fa-star"></i>
+                            <div><div class="stat-label">Dzięki!</div><div class="stat-value">Za każde wsparcie</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ==================== TAB: KONTAKT ==================== -->
+    <div class="tab-page" id="tab-kontakt">
+        <section class="section">
+            <div class="section-header">
+                <div class="section-label"><span>Kontakt</span></div>
+                <h2 class="section-title">Skontaktuj się ze mną</h2>
+            </div>
+            <div class="kontakt-grid">
+                <div class="kontakt-card">
+                    <div class="kontakt-card-title"><i class="fas fa-envelope"></i> Kontakt</div>
+                    <div class="contact-items">
+                        <div class="contact-item"><i class="fab fa-tiktok"></i><span>TikTok: <strong>@koksixx_</strong></span></div>
+                        <div class="contact-item"><i class="fab fa-discord"></i><span>Discord: <strong>koksix99</strong></span></div>
+                        <div class="contact-item"><i class="fas fa-at"></i><span>E-mail: <strong>koksix@gmail.com</strong></span></div>
+                    </div>
+                    <a href="mailto:koksix@gmail.com" class="btn-email"><i class="fas fa-paper-plane"></i> Napisz do mnie</a>
+                </div>
+                <div class="kontakt-card">
+                    <div class="kontakt-card-title"><i class="fas fa-globe"></i> Moja Domena</div>
+                    <div class="domain-name">KOKSIX.PL</div>
+                    <p class="domain-text">To tutaj znajdziesz wszystkie moje linki i informacje!</p>
+                    <button class="btn-domain" onclick="switchTab('home')"><i class="fas fa-arrow-up"></i> Strona Główna</button>
+                </div>
+                <div class="kontakt-card">
+                    <div class="kontakt-card-title"><i class="fas fa-cube"></i> Serwer Minecraft</div>
+                    <div class="server-badge-green"><span class="dot"></span> W przygotowaniu</div>
+                    <div class="domain-name" style="font-size:13px; margin-bottom:14px;">koksix.icsv.pl</div>
+                    <p class="server-text"><strong>Mój własny serwer Minecraft już wkrótce!</strong><br>Przygotowuję coś specjalnego. Śledźcie social media! 🚀</p>
+                    <button class="btn-server"><i class="fas fa-info-circle"></i> Dowiedz się więcej</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-bottom">
+                <p>&copy; 2025 <a href="#" onclick="switchTab('home'); return false;">KOKSIX.PL</a> — Wszelkie prawa zastrzeżone.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ===== TAB SWITCHING WITH ANIMATIONS =====
+        let currentTab = 'home';
+        let isTransitioning = false;
+
+        function switchTab(tabName) {
+            if (tabName === currentTab || isTransitioning) return;
+            isTransitioning = true;
+
+            const oldPage = document.getElementById('tab-' + currentTab);
+            const newPage = document.getElementById('tab-' + tabName);
+            const overlay = document.getElementById('tabOverlay');
+
+            // Update nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.getAttribute('data-tab') === tabName);
+            });
+
+            // Animate out old page
+            oldPage.classList.remove('active');
+            oldPage.classList.add('anim-out');
+
+            // Show transition overlay
+            overlay.classList.add('active', 'animating');
+
+            setTimeout(() => {
+                oldPage.classList.remove('anim-out');
+                oldPage.style.display = 'none';
+
+                // Animate in new page
+                newPage.style.display = 'block';
+                newPage.classList.add('active', 'anim-in');
+
+                // Scroll new page to top
+                newPage.scrollTop = 0;
+
+                setTimeout(() => {
+                    newPage.classList.remove('anim-in');
+                    overlay.classList.remove('animating');
+                    overlay.classList.remove('active');
+                    currentTab = tabName;
+                    isTransitioning = false;
+                }, 600);
+
+                // Run counters if sociale tab
+                if (tabName === 'sociale' && !countersStarted) {
+                    countersStarted = true;
+                    runCounters();
+                }
+            }, 300);
+
+            // Close mobile menu
+            document.getElementById('navTabs').classList.remove('open');
+            document.getElementById('navToggle').classList.remove('open');
+        }
+
+        // Tab button clicks
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.getAttribute('data-tab');
+                switchTab(targetTab);
+            });
+        });
+
+        // Logo click
+        document.getElementById('logoBtn').addEventListener('click', () => switchTab('home'));
+
+        // ===== NAVBAR =====
+        const navbar = document.getElementById('navbar');
+        const navToggle = document.getElementById('navToggle');
+
+        navToggle.addEventListener('click', () => {
+            navToggle.classList.toggle('open');
+            document.getElementById('navTabs').classList.toggle('open');
+        });
+
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // ===== PARTICLES =====
+        const canvas = document.getElementById('heroCanvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArr = [];
+
+        function resizeCanvas() {
+            const parent = canvas.parentElement;
+            canvas.width = parent.offsetWidth;
+            canvas.height = parent.offsetHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class FloatingParticle {
+            constructor() { this.reset(true); }
+            reset(initial) {
+                this.x = Math.random() * canvas.width;
+                this.y = initial ? Math.random() * canvas.height : canvas.height + 10;
+                this.size = Math.random() * 2.5 + 0.5;
+                this.speedY = -(Math.random() * 0.7 + 0.15);
+                this.speedX = (Math.random() - 0.5) * 0.3;
+                this.opacity = Math.random() * 0.5 + 0.15;
+                this.hue = 265 + Math.random() * 30;
+                this.life = 0;
+                this.maxLife = Math.random() * 500 + 250;
+                this.wobble = Math.random() * Math.PI * 2;
+                this.wobbleSpeed = 0.01 + Math.random() * 0.02;
+            }
+            update() {
+                this.wobble += this.wobbleSpeed;
+                this.x += this.speedX + Math.sin(this.wobble) * 0.3;
+                this.y += this.speedY;
+                this.life++;
+                if (this.life > this.maxLife || this.y < -10) this.reset(false);
+            }
+            draw() {
+                const lr = this.life / this.maxLife;
+                let alpha = this.opacity;
+                if (lr < 0.1) alpha *= lr / 0.1;
+                else if (lr > 0.85) alpha *= (1 - lr) / 0.15;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `hsla(${this.hue}, 80%, 70%, ${alpha})`;
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 50; i++) particlesArr.push(new FloatingParticle());
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particlesArr.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // ===== ANIMATION HELPER =====
+        function animateNumber(el, target, duration) {
+            const start = performance.now();
+            function tick(now) {
+                const progress = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                el.textContent = Math.floor(eased * target).toLocaleString('pl-PL');
+                if (progress < 1) requestAnimationFrame(tick);
+                else el.textContent = target.toLocaleString('pl-PL');
+            }
+            requestAnimationFrame(tick);
+        }
+
+        // ===== FETCH TIKTOK =====
+        async function fetchTiktokFollowers() {
+            const proxies = [
+                'https://api.allorigins.win/get?url=',
+                'https://api.codetabs.com/v1/proxy?quest=',
+            ];
+
+            for (const proxy of proxies) {
+                try {
+                    const fetchUrl = proxy + encodeURIComponent('https://www.tiktok.com/@koksixx_');
+                    const resp = await fetch(fetchUrl, { signal: AbortSignal.timeout(10000) });
+                    if (!resp.ok) continue;
+
+                    let html = '';
+                    if (proxy.includes('allorigins')) {
+                        const json = await resp.json();
+                        html = json.contents || '';
+                    } else {
+                        html = await resp.text();
+                    }
+
+                    if (!html) continue;
+
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+
+                    const jsonScripts = doc.querySelectorAll('script[type="application/ld+json"]');
+                    for (const script of jsonScripts) {
+                        try {
+                            const json = JSON.parse(script.textContent);
+                            if (json && json.interactionStatistic) {
+                                for (const stat of json.interactionStatistic) {
+                                    if (stat.interactionType &&
+                                        (stat.interactionType.name === 'Follow' || stat.interactionType === 'Follow')) {
+                                        const count = parseInt(stat.userInteractionCount);
+                                        if (!isNaN(count) && count > 0) return count;
+                                    }
+                                }
+                            }
+                        } catch(e) {}
+                    }
+
+                    const ogDesc = doc.querySelector('meta[property="og:description"]');
+                    if (ogDesc) {
+                        const text = ogDesc.getAttribute('content') || '';
+                        const match = text.match(/([\d,.]+)\s*([KM]?)\s*Followers/i);
+                        if (match) {
+                            let num = parseFloat(match[1].replace(/,/g, ''));
+                            if (match[2] === 'K' || match[2] === 'k') num *= 1000;
+                            else if (match[2] === 'M' || match[2] === 'm') num *= 1000000;
+                            num = Math.round(num);
+                            if (!isNaN(num) && num > 0) return num;
+                        }
+                    }
+
+                    const metaDesc = doc.querySelector('meta[name="description"]');
+                    if (metaDesc) {
+                        const text = metaDesc.getAttribute('content') || '';
+                        const match = text.match(/([\d,.]+)\s*([KM]?)\s*Followers/i);
+                        if (match) {
+                            let num = parseFloat(match[1].replace(/,/g, ''));
+                            if (match[2] === 'K' || match[2] === 'k') num *= 1000;
+                            else if (match[2] === 'M' || match[2] === 'm') num *= 1000000;
+                            num = Math.round(num);
+                            if (!isNaN(num) && num > 0) return num;
+                        }
+                    }
+
+                    const bodyText = doc.body ? (doc.body.textContent || '') : '';
+                    const patterns = [
+                        /([\d,.]+)\s*([KM]?)\s*Followers/i,
+                        /([\d,.]+)\s*([KM]?)\s*obserwujących/i,
+                    ];
+                    for (const pattern of patterns) {
+                        const m = bodyText.match(pattern);
+                        if (m) {
+                            let num = parseFloat(m[1].replace(/,/g, ''));
+                            if (m[2] === 'K' || m[2] === 'k') num *= 1000;
+                            else if (m[2] === 'M' || m[2] === 'm') num *= 1000000;
+                            num = Math.round(num);
+                            if (!isNaN(num) && num > 0) return num;
+                        }
+                    }
+
+                    try {
+                        const apiFetch = proxy + encodeURIComponent('https://www.tiktok.com/api/user/detail/?uniqueId=koksixx_');
+                        const apiResp = await fetch(apiFetch, { signal: AbortSignal.timeout(8000) });
+                        if (apiResp.ok) {
+                            let apiData = '';
+                            if (proxy.includes('allorigins')) {
+                                const j = await apiResp.json();
+                                apiData = j.contents || '';
+                            } else {
+                                apiData = await apiResp.text();
+                            }
+                            if (apiData) {
+                                const apiJson = JSON.parse(apiData);
+                                if (apiJson && apiJson.userInfo && apiJson.userInfo.stats) {
+                                    const count = parseInt(apiJson.userInfo.stats.followerCount);
+                                    if (!isNaN(count) && count > 0) return count;
+                                }
+                            }
+                        }
+                    } catch(e) {}
+
+                    try {
+                        const embedFetch = proxy + encodeURIComponent('https://www.tiktok.com/embed/@koksixx_');
+                        const embedResp = await fetch(embedFetch, { signal: AbortSignal.timeout(8000) });
+                        if (embedResp.ok) {
+                            let embedData = '';
+                            if (proxy.includes('allorigins')) {
+                                const j = await embedResp.json();
+                                embedData = j.contents || '';
+                            } else {
+                                embedData = await embedResp.text();
+                            }
+                            if (embedData) {
+                                const numMatch = embedData.match(/"followerCount"\s*:\s*(\d+)/);
+                                if (numMatch) {
+                                    const count = parseInt(numMatch[1]);
+                                    if (!isNaN(count) && count > 0) return count;
+                                }
+                            }
+                        }
+                    } catch(e) {}
+
+                } catch(e) { continue; }
+            }
+            return 0;
+        }
+
+        // ===== FETCH YOUTUBE =====
+        async function fetchYoutubeSubscribers() {
+            try {
+                const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.youtube.com/@koksix_99');
+                const resp = await fetch(proxyUrl, { signal: AbortSignal.timeout(10000) });
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                const data = await resp.json();
+                if (!data.contents) throw new Error('No contents');
+
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data.contents, 'text/html');
+
+                const jsonScripts = doc.querySelectorAll('script[type="application/ld+json"]');
+                for (const script of jsonScripts) {
+                    try {
+                        const json = JSON.parse(script.textContent);
+                        if (json && json.interactionStatistic) {
+                            for (const stat of json.interactionStatistic) {
+                                if (stat.interactionType === 'SubscribeAction') {
+                                    const count = parseInt(stat.userInteractionCount);
+                                    if (!isNaN(count) && count > 0) return count;
+                                }
+                            }
+                        }
+                        if (json && json.subscriberCount) {
+                            const count = parseInt(json.subscriberCount);
+                            if (!isNaN(count) && count > 0) return count;
+                        }
+                    } catch(e) {}
+                }
+
+                const ogDesc = doc.querySelector('meta[property="og:description"]');
+                if (ogDesc) {
+                    const text = ogDesc.getAttribute('content') || '';
+                    const match = text.match(/([\d,.]+)\s*subscribers/i);
+                    if (match) {
+                        const num = parseInt(match[1].replace(/,/g, ''));
+                        if (!isNaN(num) && num > 0) return num;
+                    }
+                }
+
+                const bodyText = doc.body ? (doc.body.textContent || '') : '';
+                const subMatch = bodyText.match(/([\d,.]+)\s*subscribers/i);
+                if (subMatch) {
+                    const num = parseInt(subMatch[1].replace(/,/g, ''));
+                    if (!isNaN(num) && num > 0) return num;
+                }
+
+                throw new Error('Could not parse');
+            } catch (err) {
+                console.warn('YouTube fetch failed:', err.message);
+                return 0;
+            }
+        }
+
+        // ===== FETCH DISCORD =====
+        async function fetchDiscordMembers() {
+            try {
+                const resp = await fetch(
+                    'https://discord.com/api/v9/invites/axEau9f3?with_counts=true&with_expiration=true',
+                    { headers: { 'Accept': 'application/json' }, signal: AbortSignal.timeout(10000) }
+                );
+                if (!resp.ok) throw new Error(`Discord API HTTP ${resp.status}`);
+                const data = await resp.json();
+                if (data && data.approximate_member_count) {
+                    return data.approximate_member_count;
+                }
+                throw new Error('No member count');
+            } catch (err) {
+                console.warn('Discord fetch failed:', err.message);
+                return 0;
+            }
+        }
+
+        // ===== MAIN COUNTERS =====
+        let countersStarted = false;
+
+        async function runCounters() {
+            const tiktokEl = document.getElementById('tiktokCount');
+            const youtubeEl = document.getElementById('youtubeCount');
+            const discordEl = document.getElementById('discordCount');
+            const totalEl = document.getElementById('totalCount');
+            const discordTotalEl = document.getElementById('discordTotal');
+
+            const [tiktokResult, youtubeResult, discordResult] = await Promise.allSettled([
+                fetchTiktokFollowers(),
+                fetchYoutubeSubscribers(),
+                fetchDiscordMembers()
+            ]);
+
+            const tiktokVal = tiktokResult.status === 'fulfilled' ? tiktokResult.value : 0;
+            const youtubeVal = youtubeResult.status === 'fulfilled' ? youtubeResult.value : 0;
+            const discordVal = discordResult.status === 'fulfilled' ? discordResult.value : 0;
+
+            if (tiktokVal > 0 && tiktokEl) {
+                animateNumber(tiktokEl, tiktokVal, 2000);
+            } else if (tiktokEl) {
+                tiktokEl.innerHTML = '<span class="fetch-fallback">Sprawdź →</span>';
+            }
+
+            if (youtubeVal > 0 && youtubeEl) {
+                animateNumber(youtubeEl, youtubeVal, 2000);
+            } else if (youtubeEl) {
+                youtubeEl.innerHTML = '<span class="fetch-fallback">Sprawdź →</span>';
+            }
+
+            if (discordVal > 0 && discordEl) {
+                animateNumber(discordEl, discordVal, 2000);
+            } else if (discordEl) {
+                discordEl.innerHTML = '<span class="fetch-fallback">Sprawdź →</span>';
+            }
+
+            const observersTotal = tiktokVal + youtubeVal;
+            if (observersTotal > 0) {
+                setTimeout(() => animateNumber(totalEl, observersTotal, 2500), 400);
+            } else {
+                totalEl.textContent = '—';
+            }
+
+            if (discordVal > 0 && discordTotalEl) {
+                setTimeout(() => animateNumber(discordTotalEl, discordVal, 2500), 600);
+            } else {
+                discordTotalEl.textContent = '—';
+            }
+        }
+
+        // ===== TILT EFFECT (desktop) =====
+        if (window.matchMedia('(min-width: 769px)').matches) {
+            document.querySelectorAll('.sociale-card:not(.disabled)').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const cx = rect.width / 2;
+                    const cy = rect.height / 2;
+                    const rx = ((y - cy) / cy) * -5;
+                    const ry = ((x - cx) / cx) * 5;
+                    card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-8px)`;
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = '';
+                });
+            });
+        }
+    </script>
+</body>
+</html>
+
