@@ -635,16 +635,6 @@
             color: var(--text-white); box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
         }
         .admin-modal .modal-btn-danger:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(239, 68, 68, 0.5); }
-        .admin-modal .modal-btn-github {
-            background: linear-gradient(135deg, #24292e, #444d56);
-            color: var(--text-white); box-shadow: 0 4px 20px rgba(36, 41, 46, 0.3);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .admin-modal .modal-btn-github:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(36, 41, 46, 0.5); }
         .admin-modal .modal-error {
             background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3);
             border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px;
@@ -668,17 +658,6 @@
         }
         .admin-modal .admin-badge i { font-size: 12px; }
         .admin-modal .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--glass-border), transparent); margin: 20px 0; }
-        .admin-modal .github-info {
-            background: rgba(139, 92, 246, 0.08);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-sm);
-            padding: 14px;
-            font-size: 12px;
-            color: var(--text-light);
-            line-height: 1.6;
-            margin-bottom: 16px;
-        }
-        .admin-modal .github-info i { color: var(--purple-light); margin-right: 6px; }
 
         .footer { background: rgba(3, 1, 8, 0.95); border-top: 1px solid var(--glass-border); padding: 24px; position: relative; z-index: 2; }
         .footer-inner { max-width: 1200px; margin: 0 auto; text-align: center; }
@@ -780,20 +759,17 @@
 
             <!-- PUBLISH VIEW -->
             <div id="publishView" style="display: none;">
-                <h3><i class="fas fa-bullhorn"></i> Panel Ogłoszeń</h3>
+                <h3><i class="fas fa-bullhorn"></i> Dodaj Ogłoszenie</h3>
                 <div class="admin-badge"><i class="fas fa-check-circle"></i> Zalogowano jako: Koks50</div>
-                <p class="modal-subtitle">Zarządzaj ogłoszeniami na GitHubie</p>
-                
-                <div class="github-info">
-                    <i class="fab fa-github"></i>
-                    Ogłoszenia są przechowywane w pliku <strong>ogloszenia.json</strong> na GitHubie. 
-                    Aby dodać nowe ogłoszenie, edytuj plik bezpośrednio na GitHubie.
+                <p class="modal-subtitle">Ogłoszenie pojawi się automatycznie dla wszystkich</p>
+                <div class="modal-success" id="publishSuccess"><i class="fas fa-check"></i> Ogłoszenie opublikowane!</div>
+                <div class="form-group">
+                    <label for="ogloszenieText">Treść ogłoszenia</label>
+                    <textarea id="ogloszenieText" placeholder="Wpisz treść ogłoszenia..."></textarea>
                 </div>
-
-                <a href="https://github.com/Koks052/Koksix/edit/main/ogloszenia.json" target="_blank" rel="noopener" class="modal-btn modal-btn-github">
-                    <i class="fab fa-github"></i> Edytuj na GitHubie
-                </a>
-
+                <button class="modal-btn modal-btn-primary" id="publishBtn">
+                    <i class="fas fa-paper-plane"></i> Opublikuj
+                </button>
                 <div class="divider"></div>
                 <button class="modal-btn modal-btn-danger" id="logoutBtn">
                     <i class="fas fa-sign-out-alt"></i> Wyloguj się
@@ -1014,13 +990,15 @@
 
     <script>
         // ============================================================
-        // KONFIGURACJA GITHUB
+        // KONFIGURACJA JSONBIN.IO
         // ============================================================
-        const GITHUB_REPO = 'Koks052/Koksix';
-        const GITHUB_BRANCH = 'main';
-        const GITHUB_FILE = 'ogloszenia.json';
-        const GITHUB_RAW_URL = `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/${GITHUB_FILE}`;
-        const GITHUB_EDIT_URL = `https://github.com/${GITHUB_REPO}/edit/${GITHUB_BRANCH}/${GITHUB_FILE}`;
+        // Dane są przechowywane w chmurze - niezależne od hostingu!
+        // Wystarczy zmienić hosting, a ogłoszenia nadal będą działać.
+        
+        const JSONBIN_BIN_ID = '68b98572d4f48a3c908a1c97'; // Bin ID
+        const JSONBIN_API_KEY = '$2a$10$YjK8xJzQxJzQxJzQxJzQxO'; // Master Key
+        
+        const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
         
         // ============================================================
         // STAŁE I STAN
@@ -1205,40 +1183,62 @@
         setInterval(createFloatingShape, 3000);
 
         // ============================================================
-        // OGŁOSZENIA - GITHUB
+        // OGŁOSZENIA - JSONBIN.IO (CHMURA)
         // ============================================================
         
-        // Ładowanie ogłoszeń z GitHub
-        async function loadOgloszeniaFromGitHub() {
+        // Ładowanie ogłoszeń z chmury
+        async function loadOgloszeniaFromCloud() {
             if (isLoadingOgloszenia) return;
             isLoadingOgloszenia = true;
 
             try {
-                const response = await fetch(GITHUB_RAW_URL + '?t=' + Date.now()); // Cache busting
-                
+                const response = await fetch(JSONBIN_URL, {
+                    method: 'GET',
+                    headers: {
+                        'X-Master-Key': JSONBIN_API_KEY
+                    }
+                });
+
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`);
                 }
 
                 const data = await response.json();
-                
-                // Obsługa różnych formatów pliku JSON
-                if (Array.isArray(data)) {
-                    ogloszeniaData = data;
-                } else if (data.ogloszenia && Array.isArray(data.ogloszenia)) {
-                    ogloszeniaData = data.ogloszenia;
-                } else if (data.announcements && Array.isArray(data.announcements)) {
-                    ogloszeniaData = data.announcements;
+                if (data.record && data.record.ogloszenia) {
+                    ogloszeniaData = data.record.ogloszenia;
                 } else {
                     ogloszeniaData = [];
                 }
 
             } catch (error) {
-                console.error('Błąd ładowania ogłoszeń z GitHub:', error);
-                // Fallback: pusta lista
+                console.error('Błąd ładowania ogłoszeń:', error);
                 ogloszeniaData = [];
             } finally {
                 isLoadingOgloszenia = false;
+            }
+        }
+
+        // Zapisywanie ogłoszeń do chmury
+        async function saveOgloszeniaToCloud() {
+            try {
+                const response = await fetch(JSONBIN_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': JSONBIN_API_KEY
+                    },
+                    body: JSON.stringify({ ogloszenia: ogloszeniaData })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                return true;
+
+            } catch (error) {
+                console.error('Błąd zapisywania ogłoszeń:', error);
+                return false;
             }
         }
 
@@ -1264,10 +1264,13 @@
 
             list.innerHTML = ogloszeniaData.map((og, index) => `
                 <div class="ogloszenie-item">
+                    <button class="ogloszenie-delete-btn" onclick="deleteOgloszenie(${index})" title="Usuń ogłoszenie">
+                        <i class="fas fa-trash"></i>
+                    </button>
                     <div class="ogloszenie-date">
-                        <i class="fas fa-calendar-alt"></i> ${escapeHtml(og.date || 'Brak daty')}
+                        <i class="fas fa-calendar-alt"></i> ${escapeHtml(og.date)}
                     </div>
-                    <div class="ogloszenie-text">${escapeHtml(og.text || og.message || og.content || '')}</div>
+                    <div class="ogloszenie-text">${escapeHtml(og.text)}</div>
                 </div>
             `).join('');
         }
@@ -1283,9 +1286,58 @@
                 </div>
             `;
 
-            await loadOgloszeniaFromGitHub();
+            await loadOgloszeniaFromCloud();
             renderOgloszenia();
         }
+
+        // Dodawanie ogłoszenia (tylko admin)
+        async function addOgloszenie(text) {
+            if (!isAdminLoggedIn) {
+                console.error('Nie jesteś zalogowany jako administrator');
+                return false;
+            }
+            if (!text || !text.trim()) {
+                console.error('Tekst ogłoszenia jest pusty');
+                return false;
+            }
+
+            const now = new Date();
+            const formattedDate = now.toLocaleDateString('pl-PL', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            const newOgloszenie = {
+                text: text.trim(),
+                date: formattedDate,
+                id: Date.now()
+            };
+
+            // Dodaj na początek tablicy
+            ogloszeniaData.unshift(newOgloszenie);
+            
+            // Zapisz do chmury
+            const success = await saveOgloszeniaToCloud();
+            
+            // Natychmiast zrenderuj
+            renderOgloszenia();
+            
+            console.log('Ogłoszenie dodane pomyślnie:', newOgloszenie);
+            return success;
+        }
+
+        // Usuwanie ogłoszenia (tylko admin)
+        window.deleteOgloszenie = async function(index) {
+            if (!isAdminLoggedIn) return;
+            if (index >= 0 && index < ogloszeniaData.length) {
+                ogloszeniaData.splice(index, 1);
+                await saveOgloszeniaToCloud();
+                renderOgloszenia();
+            }
+        };
 
         // ============================================================
         // ADMIN MODAL
@@ -1299,6 +1351,9 @@
         const loginPassInput = document.getElementById('loginPass');
         const loginBtn = document.getElementById('loginBtn');
         const loginError = document.getElementById('loginError');
+        const publishBtn = document.getElementById('publishBtn');
+        const ogloszenieText = document.getElementById('ogloszenieText');
+        const publishSuccess = document.getElementById('publishSuccess');
         const logoutBtn = document.getElementById('logoutBtn');
 
         function openAdminModal() {
@@ -1313,6 +1368,9 @@
             } else {
                 loginView.style.display = 'none';
                 publishView.style.display = 'block';
+                ogloszenieText.value = '';
+                publishSuccess.classList.remove('visible');
+                setTimeout(() => ogloszenieText.focus(), 400);
             }
         }
 
@@ -1349,6 +1407,9 @@
                 loginError.classList.remove('visible');
                 loginView.style.display = 'none';
                 publishView.style.display = 'block';
+                ogloszenieText.value = '';
+                publishSuccess.classList.remove('visible');
+                setTimeout(() => ogloszenieText.focus(), 300);
             } else {
                 loginError.classList.add('visible');
                 loginPassInput.value = '';
@@ -1363,11 +1424,48 @@
             if (e.key === 'Enter') { e.preventDefault(); loginPassInput.focus(); }
         });
 
+        // PUBLISH
+        publishBtn.addEventListener('click', async () => {
+            const text = ogloszenieText.value.trim();
+            if (!text) {
+                ogloszenieText.focus();
+                ogloszenieText.style.borderColor = '#ef4444';
+                setTimeout(() => { ogloszenieText.style.borderColor = ''; }, 2000);
+                return;
+            }
+
+            // Pokaż loading na przycisku
+            const originalText = publishBtn.innerHTML;
+            publishBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publikowanie...';
+            publishBtn.disabled = true;
+
+            const success = await addOgloszenie(text);
+
+            publishBtn.innerHTML = originalText;
+            publishBtn.disabled = false;
+
+            if (success) {
+                publishSuccess.classList.add('visible');
+                ogloszenieText.value = '';
+                setTimeout(() => { publishSuccess.classList.remove('visible'); }, 3000);
+            } else {
+                alert('Wystąpił błąd podczas publikowania.');
+            }
+        });
+
+        ogloszenieText.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                publishBtn.click();
+            }
+        });
+
         // LOGOUT
         logoutBtn.addEventListener('click', () => {
             isAdminLoggedIn = false;
             document.body.classList.remove('admin-active');
             closeAdminModal();
+            renderOgloszenia();
         });
 
         // ============================================================
