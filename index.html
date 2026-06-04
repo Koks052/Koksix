@@ -635,6 +635,16 @@
             color: var(--text-white); box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
         }
         .admin-modal .modal-btn-danger:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(239, 68, 68, 0.5); }
+        .admin-modal .modal-btn-github {
+            background: linear-gradient(135deg, #24292e, #444d56);
+            color: var(--text-white); box-shadow: 0 4px 20px rgba(36, 41, 46, 0.3);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .admin-modal .modal-btn-github:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(36, 41, 46, 0.5); }
         .admin-modal .modal-error {
             background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3);
             border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px;
@@ -658,6 +668,17 @@
         }
         .admin-modal .admin-badge i { font-size: 12px; }
         .admin-modal .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--glass-border), transparent); margin: 20px 0; }
+        .admin-modal .github-info {
+            background: rgba(139, 92, 246, 0.08);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            font-size: 12px;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .admin-modal .github-info i { color: var(--purple-light); margin-right: 6px; }
 
         .footer { background: rgba(3, 1, 8, 0.95); border-top: 1px solid var(--glass-border); padding: 24px; position: relative; z-index: 2; }
         .footer-inner { max-width: 1200px; margin: 0 auto; text-align: center; }
@@ -739,6 +760,7 @@
         <div class="admin-modal">
             <button class="admin-modal-close" id="adminModalClose"><i class="fas fa-times"></i></button>
 
+            <!-- LOGIN VIEW -->
             <div id="loginView">
                 <h3><i class="fas fa-shield-alt"></i> Panel Administratora</h3>
                 <p class="modal-subtitle">Zaloguj się, aby zarządzać ogłoszeniami</p>
@@ -756,18 +778,22 @@
                 </button>
             </div>
 
+            <!-- PUBLISH VIEW -->
             <div id="publishView" style="display: none;">
                 <h3><i class="fas fa-bullhorn"></i> Panel Ogłoszeń</h3>
                 <div class="admin-badge"><i class="fas fa-check-circle"></i> Zalogowano jako: Koks50</div>
-                <p class="modal-subtitle">Dodaj nowe ogłoszenie dla społeczności</p>
-                <div class="modal-success" id="publishSuccess"><i class="fas fa-check"></i> Ogłoszenie opublikowane pomyślnie!</div>
-                <div class="form-group">
-                    <label for="ogloszenieText">Treść ogłoszenia</label>
-                    <textarea id="ogloszenieText" placeholder="Wpisz treść ogłoszenia..."></textarea>
+                <p class="modal-subtitle">Zarządzaj ogłoszeniami na GitHubie</p>
+                
+                <div class="github-info">
+                    <i class="fab fa-github"></i>
+                    Ogłoszenia są przechowywane w pliku <strong>ogloszenia.json</strong> na GitHubie. 
+                    Aby dodać nowe ogłoszenie, edytuj plik bezpośrednio na GitHubie.
                 </div>
-                <button class="modal-btn modal-btn-primary" id="publishBtn">
-                    <i class="fas fa-paper-plane"></i> Opublikuj
-                </button>
+
+                <a href="https://github.com/Koks052/Koksix/edit/main/ogloszenia.json" target="_blank" rel="noopener" class="modal-btn modal-btn-github">
+                    <i class="fab fa-github"></i> Edytuj na GitHubie
+                </a>
+
                 <div class="divider"></div>
                 <button class="modal-btn modal-btn-danger" id="logoutBtn">
                     <i class="fas fa-sign-out-alt"></i> Wyloguj się
@@ -988,12 +1014,14 @@
 
     <script>
         // ============================================================
-        // KONFIGURACJA JSONBIN.IO
+        // KONFIGURACJA GITHUB
         // ============================================================
-        const JSONBIN_BIN_ID = '6a21bddef5f4af5e29b98e23';
-        const JSONBIN_API_KEY = '$2a$10$hC4EknUDAkgmjpgRTd5Gnupj5hAPTX.aLi2QPJcMzFq1Tn9Uf/rim';
-        const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
-
+        const GITHUB_REPO = 'Koks052/Koksix';
+        const GITHUB_BRANCH = 'main';
+        const GITHUB_FILE = 'ogloszenia.json';
+        const GITHUB_RAW_URL = `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/${GITHUB_FILE}`;
+        const GITHUB_EDIT_URL = `https://github.com/${GITHUB_REPO}/edit/${GITHUB_BRANCH}/${GITHUB_FILE}`;
+        
         // ============================================================
         // STAŁE I STAN
         // ============================================================
@@ -1176,77 +1204,42 @@
         for (let i = 0; i < 12; i++) createFloatingShape();
         setInterval(createFloatingShape, 3000);
 
-        const mouseOrb = document.createElement('div');
-        mouseOrb.style.cssText = 'position:fixed;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.08),transparent 70%);pointer-events:none;z-index:0;transition:left 0.3s ease-out,top 0.3s ease-out;transform:translate(-50%,-50%);top:72px;left:50%;';
-        document.body.appendChild(mouseOrb);
-        document.addEventListener('mousemove', (e) => {
-            mouseOrb.style.left = e.clientX + 'px';
-            mouseOrb.style.top = e.clientY + 'px';
-        });
-
         // ============================================================
-        // OGŁOSZENIA - JSONBIN.IO
+        // OGŁOSZENIA - GITHUB
         // ============================================================
-        async function loadOgloszeniaFromCloud() {
+        
+        // Ładowanie ogłoszeń z GitHub
+        async function loadOgloszeniaFromGitHub() {
             if (isLoadingOgloszenia) return;
             isLoadingOgloszenia = true;
 
             try {
-                const response = await fetch(JSONBIN_URL, {
-                    method: 'GET',
-                    headers: { 'X-Master-Key': JSONBIN_API_KEY }
-                });
-
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const response = await fetch(GITHUB_RAW_URL + '?t=' + Date.now()); // Cache busting
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
 
                 const data = await response.json();
-                if (data.record && data.record.ogloszenia) {
-                    ogloszeniaData = data.record.ogloszenia;
+                
+                // Obsługa różnych formatów pliku JSON
+                if (Array.isArray(data)) {
+                    ogloszeniaData = data;
+                } else if (data.ogloszenia && Array.isArray(data.ogloszenia)) {
+                    ogloszeniaData = data.ogloszenia;
+                } else if (data.announcements && Array.isArray(data.announcements)) {
+                    ogloszeniaData = data.announcements;
                 } else {
                     ogloszeniaData = [];
                 }
 
-                saveToLocalStorage();
             } catch (error) {
-                console.error('Błąd ładowania ogłoszeń:', error);
-                loadFromLocalStorage();
+                console.error('Błąd ładowania ogłoszeń z GitHub:', error);
+                // Fallback: pusta lista
+                ogloszeniaData = [];
             } finally {
                 isLoadingOgloszenia = false;
             }
-        }
-
-        async function saveOgloszeniaToCloud() {
-            try {
-                const response = await fetch(JSONBIN_URL, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': JSONBIN_API_KEY
-                    },
-                    body: JSON.stringify({ ogloszenia: ogloszeniaData })
-                });
-
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                saveToLocalStorage();
-                return true;
-            } catch (error) {
-                console.error('Błąd zapisywania ogłoszeń:', error);
-                saveToLocalStorage();
-                return false;
-            }
-        }
-
-        function loadFromLocalStorage() {
-            try {
-                const data = localStorage.getItem('koksix_ogloszenia');
-                if (data) ogloszeniaData = JSON.parse(data);
-            } catch(e) { ogloszeniaData = []; }
-        }
-
-        function saveToLocalStorage() {
-            try {
-                localStorage.setItem('koksix_ogloszenia', JSON.stringify(ogloszeniaData));
-            } catch(e) {}
         }
 
         function escapeHtml(text) {
@@ -1257,6 +1250,7 @@
 
         function renderOgloszenia() {
             const list = document.getElementById('ogloszeniaList');
+            
             if (!list) return;
 
             if (ogloszeniaData.length === 0) {
@@ -1270,19 +1264,18 @@
 
             list.innerHTML = ogloszeniaData.map((og, index) => `
                 <div class="ogloszenie-item">
-                    <button class="ogloszenie-delete-btn" onclick="deleteOgloszenie(${index})" title="Usuń ogłoszenie">
-                        <i class="fas fa-trash"></i>
-                    </button>
                     <div class="ogloszenie-date">
-                        <i class="fas fa-calendar-alt"></i> ${escapeHtml(og.date)}
+                        <i class="fas fa-calendar-alt"></i> ${escapeHtml(og.date || 'Brak daty')}
                     </div>
-                    <div class="ogloszenie-text">${escapeHtml(og.text)}</div>
+                    <div class="ogloszenie-text">${escapeHtml(og.text || og.message || og.content || '')}</div>
                 </div>
             `).join('');
         }
 
+        // Ładowanie i renderowanie
         async function loadAndRenderOgloszenia() {
             const list = document.getElementById('ogloszeniaList');
+            
             list.innerHTML = `
                 <div class="ogloszenie-loading">
                     <i class="fas fa-spinner"></i>
@@ -1290,40 +1283,9 @@
                 </div>
             `;
 
-            await loadOgloszeniaFromCloud();
+            await loadOgloszeniaFromGitHub();
             renderOgloszenia();
         }
-
-        async function addOgloszenie(text) {
-            if (!isAdminLoggedIn) return false;
-            if (!text || !text.trim()) return false;
-
-            const now = new Date();
-            const formattedDate = now.toLocaleDateString('pl-PL', {
-                day: '2-digit', month: '2-digit', year: 'numeric',
-                hour: '2-digit', minute: '2-digit'
-            });
-
-            const newOgloszenie = {
-                text: text.trim(),
-                date: formattedDate,
-                id: Date.now()
-            };
-
-            ogloszeniaData.unshift(newOgloszenie);
-            const success = await saveOgloszeniaToCloud();
-            renderOgloszenia();
-            return success;
-        }
-
-        window.deleteOgloszenie = async function(index) {
-            if (!isAdminLoggedIn) return;
-            if (index >= 0 && index < ogloszeniaData.length) {
-                ogloszeniaData.splice(index, 1);
-                await saveOgloszeniaToCloud();
-                renderOgloszenia();
-            }
-        };
 
         // ============================================================
         // ADMIN MODAL
@@ -1337,9 +1299,6 @@
         const loginPassInput = document.getElementById('loginPass');
         const loginBtn = document.getElementById('loginBtn');
         const loginError = document.getElementById('loginError');
-        const publishBtn = document.getElementById('publishBtn');
-        const ogloszenieText = document.getElementById('ogloszenieText');
-        const publishSuccess = document.getElementById('publishSuccess');
         const logoutBtn = document.getElementById('logoutBtn');
 
         function openAdminModal() {
@@ -1354,9 +1313,6 @@
             } else {
                 loginView.style.display = 'none';
                 publishView.style.display = 'block';
-                ogloszenieText.value = '';
-                publishSuccess.classList.remove('visible');
-                setTimeout(() => ogloszenieText.focus(), 400);
             }
         }
 
@@ -1364,8 +1320,13 @@
             adminModal.classList.remove('active');
         }
 
-        secretTrigger.addEventListener('click', () => { openAdminModal(); });
-        adminModalClose.addEventListener('click', () => { closeAdminModal(); });
+        secretTrigger.addEventListener('click', () => {
+            openAdminModal();
+        });
+
+        adminModalClose.addEventListener('click', () => {
+            closeAdminModal();
+        });
 
         adminModal.addEventListener('click', (e) => {
             if (e.target === adminModal) closeAdminModal();
@@ -1377,6 +1338,7 @@
             }
         });
 
+        // LOGIN
         loginBtn.addEventListener('click', () => {
             const user = loginUserInput.value.trim();
             const pass = loginPassInput.value;
@@ -1387,10 +1349,6 @@
                 loginError.classList.remove('visible');
                 loginView.style.display = 'none';
                 publishView.style.display = 'block';
-                ogloszenieText.value = '';
-                publishSuccess.classList.remove('visible');
-                setTimeout(() => ogloszenieText.focus(), 300);
-                renderOgloszenia();
             } else {
                 loginError.classList.add('visible');
                 loginPassInput.value = '';
@@ -1405,338 +1363,102 @@
             if (e.key === 'Enter') { e.preventDefault(); loginPassInput.focus(); }
         });
 
-        publishBtn.addEventListener('click', async () => {
-            const text = ogloszenieText.value.trim();
-            if (!text) {
-                ogloszenieText.focus();
-                ogloszenieText.style.borderColor = '#ef4444';
-                setTimeout(() => { ogloszenieText.style.borderColor = ''; }, 2000);
-                return;
-            }
-
-            const originalText = publishBtn.innerHTML;
-            publishBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publikowanie...';
-            publishBtn.disabled = true;
-
-            const success = await addOgloszenie(text);
-
-            publishBtn.innerHTML = originalText;
-            publishBtn.disabled = false;
-
-            if (success) {
-                publishSuccess.classList.add('visible');
-                ogloszenieText.value = '';
-                setTimeout(() => { publishSuccess.classList.remove('visible'); }, 3000);
-            } else {
-                alert('Wystąpił błąd podczas publikowania.');
-            }
-        });
-
-        ogloszenieText.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-                e.preventDefault();
-                publishBtn.click();
-            }
-        });
-
+        // LOGOUT
         logoutBtn.addEventListener('click', () => {
             isAdminLoggedIn = false;
             document.body.classList.remove('admin-active');
             closeAdminModal();
-            renderOgloszenia();
         });
 
         // ============================================================
-        // TIKTOK FOLLOWERS - POPRAWIONA WERSJA Z WIELU ŹRÓDŁAMI
+        // ANIMATION HELPER
         // ============================================================
-        async function fetchTiktokFollowers() {
-            const TIKTOK_PROFILE = 'https://www.tiktok.com/@koksixx_';
-            const TIKTOK_API = 'https://www.tiktok.com/api/user/detail/?uniqueId=koksixx_';
-            const TIKTOK_EMBED = 'https://www.tiktok.com/oembed?url=https://www.tiktok.com/@koksixx_';
-
-            // Lista proxy CORS do wypróbowania
-            const proxyList = [
-                { name: 'allorigins', url: 'https://api.allorigins.win/get?url=', json: true },
-                { name: 'codetabs', url: 'https://api.codetabs.com/v1/proxy?quest=', json: false },
-                { name: 'corsproxy.io', url: 'https://corsproxy.io/?', json: false },
-                { name: 'thingproxy', url: 'https://thingproxy.freeboard.io/fetch/', json: false },
-            ];
-
-            // Metoda 1: TikTok oEmbed API (najprostsza, zwraca JSON z informacjami)
-            try {
-                console.log('TikTok: Próba oEmbed API...');
-                for (const proxy of proxyList) {
-                    try {
-                        const fullUrl = proxy.url + encodeURIComponent(TIKTOK_EMBED);
-                        const resp = await fetch(fullUrl, { signal: AbortSignal.timeout(8000) });
-                        if (!resp.ok) continue;
-
-                        let data;
-                        if (proxy.json) {
-                            const json = await resp.json();
-                            data = JSON.parse(json.contents || json);
-                        } else {
-                            const text = await resp.text();
-                            data = JSON.parse(text);
-                        }
-
-                        // oEmbed zwraca author_name, ale nie followers
-                        // Jednak niektóre wersje mogą mieć dodatkowe dane
-                        if (data && data.html) {
-                            // Parsuj HTML z oEmbed
-                            const parser = new DOMParser();
-                            const doc = parser.parseFromString(data.html, 'text/html');
-                            const followerMatch = doc.body.textContent.match(/([\d,.]+)\s*([KM]?)\s*Followers/i);
-                            if (followerMatch) {
-                                let num = parseFloat(followerMatch[1].replace(/,/g, ''));
-                                if (followerMatch[2] === 'K' || followerMatch[2] === 'k') num *= 1000;
-                                else if (followerMatch[2] === 'M' || followerMatch[2] === 'm') num *= 1000000;
-                                num = Math.round(num);
-                                if (!isNaN(num) && num > 0) {
-                                    console.log('TikTok: Znaleziono przez oEmbed:', num);
-                                    return num;
-                                }
-                            }
-                        }
-                    } catch(e) { continue; }
-                }
-            } catch(e) {
-                console.log('TikTok: oEmbed nie zadziałał');
+        function animateNumber(el, target, duration) {
+            const start = performance.now();
+            function tick(now) {
+                const progress = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                el.textContent = Math.floor(eased * target).toLocaleString('pl-PL');
+                if (progress < 1) requestAnimationFrame(tick);
+                else el.textContent = target.toLocaleString('pl-PL');
             }
-
-            // Metoda 2: TikTok API /api/user/detail/ - zwraca JSON z followerCount
-            try {
-                console.log('TikTok: Próba API user/detail...');
-                for (const proxy of proxyList) {
-                    try {
-                        const fullUrl = proxy.url + encodeURIComponent(TIKTOK_API);
-                        const resp = await fetch(fullUrl, { signal: AbortSignal.timeout(8000) });
-                        if (!resp.ok) continue;
-
-                        let apiData;
-                        if (proxy.json) {
-                            const json = await resp.json();
-                            apiData = JSON.parse(json.contents || '{}');
-                        } else {
-                            const text = await resp.text();
-                            apiData = JSON.parse(text);
-                        }
-
-                        // Struktura: { userInfo: { stats: { followerCount: 12345 } } }
-                        if (apiData && apiData.userInfo && apiData.userInfo.stats) {
-                            const count = parseInt(apiData.userInfo.stats.followerCount);
-                            if (!isNaN(count) && count > 0) {
-                                console.log('TikTok: Znaleziono przez API:', count);
-                                return count;
-                            }
-                        }
-
-                        // Alternatywna struktura
-                        if (apiData && apiData.stats) {
-                            const count = parseInt(apiData.stats.followerCount);
-                            if (!isNaN(count) && count > 0) {
-                                console.log('TikTok: Znaleziono przez stats:', count);
-                                return count;
-                            }
-                        }
-                    } catch(e) { continue; }
-                }
-            } catch(e) {
-                console.log('TikTok: API nie zadziałało');
-            }
-
-            // Metoda 3: Parsowanie strony głównej profilu
-            try {
-                console.log('TikTok: Próba parsowania strony profilu...');
-                for (const proxy of proxyList) {
-                    try {
-                        const fullUrl = proxy.url + encodeURIComponent(TIKTOK_PROFILE);
-                        const resp = await fetch(fullUrl, { signal: AbortSignal.timeout(10000) });
-                        if (!resp.ok) continue;
-
-                        let html = '';
-                        if (proxy.json) {
-                            const json = await resp.json();
-                            html = json.contents || '';
-                        } else {
-                            html = await resp.text();
-                        }
-
-                        if (!html) continue;
-
-                        const parser = new DOMParser();
-                        const doc = parser.parseFromString(html, 'text/html');
-
-                        // 3a. JSON-LD structured data
-                        const jsonScripts = doc.querySelectorAll('script[type="application/ld+json"]');
-                        for (const script of jsonScripts) {
-                            try {
-                                const json = JSON.parse(script.textContent);
-                                if (json && json.interactionStatistic) {
-                                    for (const stat of json.interactionStatistic) {
-                                        if (stat.interactionType &&
-                                            (stat.interactionType.name === 'Follow' || stat.interactionType === 'Follow')) {
-                                            const count = parseInt(stat.userInteractionCount);
-                                            if (!isNaN(count) && count > 0) {
-                                                console.log('TikTok: Znaleziono przez JSON-LD:', count);
-                                                return count;
-                                            }
-                                        }
-                                    }
-                                }
-                            } catch(e) {}
-                        }
-
-                        // 3b. Meta og:description
-                        const ogDesc = doc.querySelector('meta[property="og:description"]');
-                        if (ogDesc) {
-                            const text = ogDesc.getAttribute('content') || '';
-                            const match = text.match(/([\d,.]+)\s*([KM]?)\s*Followers/i);
-                            if (match) {
-                                let num = parseFloat(match[1].replace(/,/g, ''));
-                                if (match[2] === 'K' || match[2] === 'k') num *= 1000;
-                                else if (match[2] === 'M' || match[2] === 'm') num *= 1000000;
-                                num = Math.round(num);
-                                if (!isNaN(num) && num > 0) {
-                                    console.log('TikTok: Znaleziono przez og:description:', num);
-                                    return num;
-                                }
-                            }
-                        }
-
-                        // 3c. Meta name="description"
-                        const metaDesc = doc.querySelector('meta[name="description"]');
-                        if (metaDesc) {
-                            const text = metaDesc.getAttribute('content') || '';
-                            const match = text.match(/([\d,.]+)\s*([KM]?)\s*Followers/i);
-                            if (match) {
-                                let num = parseFloat(match[1].replace(/,/g, ''));
-                                if (match[2] === 'K' || match[2] === 'k') num *= 1000;
-                                else if (match[2] === 'M' || match[2] === 'm') num *= 1000000;
-                                num = Math.round(num);
-                                if (!isNaN(num) && num > 0) {
-                                    console.log('TikTok: Znaleziono przez meta description:', num);
-                                    return num;
-                                }
-                            }
-                        }
-
-                        // 3d. Parsowanie body text - różne wzorce
-                        const bodyText = doc.body ? (doc.body.textContent || '') : '';
-                        const patterns = [
-                            /([\d,.]+)\s*([KM]?)\s*Followers/i,
-                            /([\d,.]+)\s*([KM]?)\s*obserwujących/i,
-                            /followers["\s:]+([\d,.]+)/i,
-                            /"followerCount"\s*:\s*(\d+)/,
-                        ];
-
-                        for (const pattern of patterns) {
-                            const m = bodyText.match(pattern);
-                            if (m) {
-                                let num;
-                                if (pattern.toString().includes('followerCount')) {
-                                    num = parseInt(m[1]);
-                                } else {
-                                    num = parseFloat(m[1].replace(/,/g, ''));
-                                    if (m[2] === 'K' || m[2] === 'k') num *= 1000;
-                                    else if (m[2] === 'M' || m[2] === 'm') num *= 1000000;
-                                    num = Math.round(num);
-                                }
-                                if (!isNaN(num) && num > 0 && num < 1000000000) {
-                                    console.log('TikTok: Znaleziono przez body text:', num);
-                                    return num;
-                                }
-                            }
-                        }
-
-                        // 3e. Szukaj w inline script danych JSON
-                        const scripts = doc.querySelectorAll('script');
-                        for (const script of scripts) {
-                            const content = script.textContent || '';
-                            if (content.includes('followerCount') || content.includes('follower_count')) {
-                                const match = content.match(/"follower[_]?[Cc]ount"\s*:\s*(\d+)/);
-                                if (match) {
-                                    const count = parseInt(match[1]);
-                                    if (!isNaN(count) && count > 0) {
-                                        console.log('TikTok: Znaleziono w inline script:', count);
-                                        return count;
-                                    }
-                                }
-                            }
-                        }
-
-                    } catch(e) { continue; }
-                }
-            } catch(e) {
-                console.log('TikTok: Parsowanie strony nie zadziałało');
-            }
-
-            // Metoda 4: Alternatywne endpointy TikTok
-            try {
-                console.log('TikTok: Próba alternatywnych endpointów...');
-                const altUrls = [
-                    'https://www.tiktok.com/api/post/item_list/?uniqueId=koksixx_&count=1',
-                    'https://m.tiktok.com/@koksixx_/',
-                ];
-
-                for (const altUrl of altUrls) {
-                    for (const proxy of proxyList) {
-                        try {
-                            const fullUrl = proxy.url + encodeURIComponent(altUrl);
-                            const resp = await fetch(fullUrl, { signal: AbortSignal.timeout(8000) });
-                            if (!resp.ok) continue;
-
-                            let text;
-                            if (proxy.json) {
-                                const json = await resp.json();
-                                text = json.contents || '';
-                            } else {
-                                text = await resp.text();
-                            }
-
-                            if (!text) continue;
-
-                            // Szukaj followerCount w odpowiedzi
-                            const match = text.match(/"followerCount"\s*:\s*(\d+)/);
-                            if (match) {
-                                const count = parseInt(match[1]);
-                                if (!isNaN(count) && count > 0) {
-                                    console.log('TikTok: Znaleziono przez alt endpoint:', count);
-                                    return count;
-                                }
-                            }
-
-                            // Parsuj jako HTML jeśli to strona mobilna
-                            if (altUrl.includes('m.tiktok.com')) {
-                                const parser = new DOMParser();
-                                const doc = parser.parseFromString(text, 'text/html');
-                                const bodyText = doc.body ? (doc.body.textContent || '') : '';
-                                const followerMatch = bodyText.match(/([\d,.]+)\s*([KM]?)\s*Followers/i);
-                                if (followerMatch) {
-                                    let num = parseFloat(followerMatch[1].replace(/,/g, ''));
-                                    if (followerMatch[2] === 'K' || followerMatch[2] === 'k') num *= 1000;
-                                    else if (followerMatch[2] === 'M' || followerMatch[2] === 'm') num *= 1000000;
-                                    num = Math.round(num);
-                                    if (!isNaN(num) && num > 0) {
-                                        console.log('TikTok: Znaleziono przez mobile:', num);
-                                        return num;
-                                    }
-                                }
-                            }
-                        } catch(e) { continue; }
-                    }
-                }
-            } catch(e) {
-                console.log('TikTok: Alternatywne endpointy nie zadziałały');
-            }
-
-            console.log('TikTok: Nie udało się pobrać liczby obserwujących');
-            return 0;
+            requestAnimationFrame(tick);
         }
 
         // ============================================================
-        // YOUTUBE SUBSCRIBERS
+        // FETCH SOCIALS
         // ============================================================
+        async function fetchTiktokFollowers() {
+            const proxies = ['https://api.allorigins.win/get?url=', 'https://api.codetabs.com/v1/proxy?quest='];
+            for (const proxy of proxies) {
+                try {
+                    const resp = await fetch(proxy + encodeURIComponent('https://www.tiktok.com/@koksixx_'), { signal: AbortSignal.timeout(10000) });
+                    if (!resp.ok) continue;
+                    let html = '';
+                    if (proxy.includes('allorigins')) { const j = await resp.json(); html = j.contents || ''; }
+                    else { html = await resp.text(); }
+                    if (!html) continue;
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const jsonScripts = doc.querySelectorAll('script[type="application/ld+json"]');
+                    for (const script of jsonScripts) {
+                        try {
+                            const json = JSON.parse(script.textContent);
+                            if (json && json.interactionStatistic) {
+                                for (const stat of json.interactionStatistic) {
+                                    if (stat.interactionType && (stat.interactionType.name === 'Follow' || stat.interactionType === 'Follow')) {
+                                        const count = parseInt(stat.userInteractionCount);
+                                        if (!isNaN(count) && count > 0) return count;
+                                    }
+                                }
+                            }
+                        } catch(e) {}
+                    }
+                    const ogDesc = doc.querySelector('meta[property="og:description"]');
+                    if (ogDesc) {
+                        const text = ogDesc.getAttribute('content') || '';
+                        const match = text.match(/([\d,.]+)\s*([KM]?)\s*Followers/i);
+                        if (match) {
+                            let num = parseFloat(match[1].replace(/,/g, ''));
+                            if (match[2] === 'K' || match[2] === 'k') num *= 1000;
+                            else if (match[2] === 'M' || match[2] === 'm') num *= 1000000;
+                            num = Math.round(num);
+                            if (!isNaN(num) && num > 0) return num;
+                        }
+                    }
+                    const bodyText = doc.body ? (doc.body.textContent || '') : '';
+                    const patterns = [/([\d,.]+)\s*([KM]?)\s*Followers/i, /([\d,.]+)\s*([KM]?)\s*obserwujących/i];
+                    for (const pattern of patterns) {
+                        const m = bodyText.match(pattern);
+                        if (m) {
+                            let num = parseFloat(m[1].replace(/,/g, ''));
+                            if (m[2] === 'K' || m[2] === 'k') num *= 1000;
+                            else if (m[2] === 'M' || m[2] === 'm') num *= 1000000;
+                            num = Math.round(num);
+                            if (!isNaN(num) && num > 0) return num;
+                        }
+                    }
+                    try {
+                        const apiFetch = proxy + encodeURIComponent('https://www.tiktok.com/api/user/detail/?uniqueId=koksixx_');
+                        const apiResp = await fetch(apiFetch, { signal: AbortSignal.timeout(8000) });
+                        if (apiResp.ok) {
+                            let apiData = '';
+                            if (proxy.includes('allorigins')) { const j = await apiResp.json(); apiData = j.contents || ''; }
+                            else { apiData = await apiResp.text(); }
+                            if (apiData) {
+                                const apiJson = JSON.parse(apiData);
+                                if (apiJson && apiJson.userInfo && apiJson.userInfo.stats) {
+                                    const count = parseInt(apiJson.userInfo.stats.followerCount);
+                                    if (!isNaN(count) && count > 0) return count;
+                                }
+                            }
+                        }
+                    } catch(e) {}
+                } catch(e) { continue; }
+            }
+            return 0;
+        }
+
         async function fetchYoutubeSubscribers() {
             try {
                 const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.youtube.com/@koksix_99');
@@ -1783,9 +1505,6 @@
             return 0;
         }
 
-        // ============================================================
-        // DISCORD MEMBERS
-        // ============================================================
         async function fetchDiscordMembers() {
             try {
                 const resp = await fetch('https://discord.com/api/v9/invites/axEau9f3?with_counts=true&with_expiration=true',
@@ -1795,21 +1514,6 @@
                 if (data && data.approximate_member_count) return data.approximate_member_count;
             } catch(e) {}
             return 0;
-        }
-
-        // ============================================================
-        // COUNTERS
-        // ============================================================
-        function animateNumber(el, target, duration) {
-            const start = performance.now();
-            function tick(now) {
-                const progress = Math.min((now - start) / duration, 1);
-                const eased = 1 - Math.pow(1 - progress, 3);
-                el.textContent = Math.floor(eased * target).toLocaleString('pl-PL');
-                if (progress < 1) requestAnimationFrame(tick);
-                else el.textContent = target.toLocaleString('pl-PL');
-            }
-            requestAnimationFrame(tick);
         }
 
         let countersStarted = false;
@@ -1863,11 +1567,6 @@
                 card.addEventListener('mouseleave', () => { card.style.transform = ''; });
             });
         }
-
-        // ============================================================
-        // INIT
-        // ============================================================
-        loadFromLocalStorage();
     </script>
 </body>
 </html>
