@@ -552,10 +552,18 @@
         .ogloszenie-loading {
             text-align: center; padding: 40px 24px; color: var(--text-muted);
         }
-        .ogloszenie-loading i {
-            font-size: 32px; color: var(--purple-light); margin-bottom: 12px;
-            animation: spin 1s linear infinite; display: block;
+        .ogloszenie-loading .loading-spinner {
+            width: 32px; height: 32px; border-width: 3px;
         }
+        .ogloszenie-loading p { margin-top: 12px; font-size: 14px; }
+
+        .ogloszenie-error {
+            text-align: center; padding: 40px 24px; color: #fca5a5;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: var(--radius-lg);
+        }
+        .ogloszenie-error i { font-size: 36px; margin-bottom: 12px; display: block; }
 
         .secret-trigger {
             position: fixed; bottom: 0; left: 0;
@@ -630,6 +638,9 @@
             color: var(--text-white); box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
         }
         .admin-modal .modal-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139, 92, 246, 0.5); }
+        .admin-modal .modal-btn-primary:disabled {
+            opacity: 0.5; cursor: not-allowed; transform: none;
+        }
         .admin-modal .modal-btn-danger {
             background: linear-gradient(135deg, #ef4444, #dc2626);
             color: var(--text-white); box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
@@ -658,6 +669,16 @@
         }
         .admin-modal .admin-badge i { font-size: 12px; }
         .admin-modal .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--glass-border), transparent); margin: 20px 0; }
+        .admin-modal .firebase-status {
+            display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
+            background: rgba(255, 165, 0, 0.1); border: 1px solid rgba(255, 165, 0, 0.2);
+            border-radius: 50px; font-size: 10px; font-weight: 600; color: #fbbf24;
+            margin-bottom: 16px;
+        }
+        .admin-modal .firebase-status .status-dot {
+            width: 6px; height: 6px; background: #fbbf24; border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
 
         .footer { background: rgba(3, 1, 8, 0.95); border-top: 1px solid var(--glass-border); padding: 24px; position: relative; z-index: 2; }
         .footer-inner { max-width: 1200px; margin: 0 auto; text-align: center; }
@@ -759,10 +780,12 @@
 
             <!-- PUBLISH VIEW -->
             <div id="publishView" style="display: none;">
-                <h3><i class="fas fa-bullhorn"></i> Dodaj Ogłoszenie</h3>
+                <h3><i class="fas fa-bullhorn"></i> Panel Ogłoszeń</h3>
                 <div class="admin-badge"><i class="fas fa-check-circle"></i> Zalogowano jako: Koks50</div>
-                <p class="modal-subtitle">Ogłoszenie pojawi się automatycznie dla wszystkich</p>
-                <div class="modal-success" id="publishSuccess"><i class="fas fa-check"></i> Ogłoszenie opublikowane!</div>
+                <div class="firebase-status"><span class="status-dot"></span> Połączono z Firebase</div>
+                <p class="modal-subtitle">Dodaj nowe ogłoszenie dla społeczności</p>
+                <div class="modal-success" id="publishSuccess"><i class="fas fa-check"></i> Ogłoszenie opublikowane pomyślnie!</div>
+                <div class="modal-error" id="publishError"><i class="fas fa-exclamation-circle"></i> Błąd podczas publikowania!</div>
                 <div class="form-group">
                     <label for="ogloszenieText">Treść ogłoszenia</label>
                     <textarea id="ogloszenieText" placeholder="Wpisz treść ogłoszenia..."></textarea>
@@ -915,7 +938,7 @@
             </div>
             <div class="ogloszenia-list" id="ogloszeniaList">
                 <div class="ogloszenie-loading">
-                    <i class="fas fa-spinner"></i>
+                    <div class="loading-spinner"></div>
                     <p>Ładowanie ogłoszeń...</p>
                 </div>
             </div>
@@ -973,7 +996,7 @@
                     <div class="kontakt-card-title"><i class="fas fa-cube"></i> Serwer Minecraft</div>
                     <div class="server-badge-green"><span class="dot"></span> W przygotowaniu</div>
                     <div class="domain-name" style="font-size:13px; margin-bottom:14px;">koksix.icsv.pl</div>
-                    <p class="server-text"><strong>Mój własny serwer Minecraft już wkrótce!</strong><br>Przygotowuję coś specjalnego. Śledźcie social media! </p>
+                    <p class="server-text"><strong>Mój własny serwer Minecraft już wkrótce!</strong><br>Przygotowuję coś specjalnego. Śledźcie social media! 🚀</p>
                     <button class="btn-server"><i class="fas fa-info-circle"></i> Dowiedz się więcej</button>
                 </div>
             </div>
@@ -989,32 +1012,20 @@
     </footer>
 
     <script>
-        // ============================================================
-        // KONFIGURACJA JSONBIN.IO
-        // ============================================================
-        // Dane są przechowywane w chmurze - niezależne od hostingu!
-        // Wystarczy zmienić hosting, a ogłoszenia nadal będą działać.
-        
-        const JSONBIN_BIN_ID = '68b98572d4f48a3c908a1c97'; // Bin ID
-        const JSONBIN_API_KEY = '$2a$10$YjK8xJzQxJzQxJzQxJzQxO'; // Master Key
-        
-        const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
-        
-        // ============================================================
-        // STAŁE I STAN
-        // ============================================================
+        // ===== CONSTANTS =====
         const ADMIN_LOGIN = 'Koks50';
         const ADMIN_PASSWORD = 'Koksix12';
+        const FIREBASE_URL = 'https://koksix-default-rtdb.firebaseio.com/ogloszenia.json';
+        const FIREBASE_BASE = 'https://koksix-default-rtdb.firebaseio.com';
 
+        // ===== STATE =====
         let currentTab = 'home';
         let isTransitioning = false;
         let isAdminLoggedIn = false;
         let ogloszeniaData = [];
-        let isLoadingOgloszenia = false;
+        let isFirebaseLoading = false;
 
-        // ============================================================
-        // TAB SWITCHING
-        // ============================================================
+        // ===== TAB SWITCHING =====
         function switchTab(tabName) {
             if (tabName === currentTab || isTransitioning) return;
             isTransitioning = true;
@@ -1069,9 +1080,7 @@
 
         document.getElementById('logoBtn').addEventListener('click', () => switchTab('home'));
 
-        // ============================================================
-        // NAVBAR
-        // ============================================================
+        // ===== NAVBAR =====
         const navbar = document.getElementById('navbar');
         const navToggle = document.getElementById('navToggle');
 
@@ -1084,9 +1093,7 @@
             navbar.classList.toggle('scrolled', window.scrollY > 50);
         });
 
-        // ============================================================
-        // BACKGROUND ANIMATIONS
-        // ============================================================
+        // ===== BACKGROUND ANIMATIONS =====
         const tabCanvases = {
             home: document.getElementById('canvas-home'),
             sociale: document.getElementById('canvas-sociale'),
@@ -1164,6 +1171,7 @@
             });
         });
 
+        // Floating shapes
         const floatingContainer = document.getElementById('floatingShapes');
         function createFloatingShape() {
             const shape = document.createElement('div');
@@ -1182,63 +1190,130 @@
         for (let i = 0; i < 12; i++) createFloatingShape();
         setInterval(createFloatingShape, 3000);
 
-        // ============================================================
-        // OGŁOSZENIA - JSONBIN.IO (CHMURA)
-        // ============================================================
+        // Mouse orb
+        const mouseOrb = document.createElement('div');
+        mouseOrb.style.cssText = 'position:fixed;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.08),transparent 70%);pointer-events:none;z-index:0;transition:left 0.3s ease-out,top 0.3s ease-out;transform:translate(-50%,-50%);top:72px;left:50%;';
+        document.body.appendChild(mouseOrb);
+        document.addEventListener('mousemove', (e) => {
+            mouseOrb.style.left = e.clientX + 'px';
+            mouseOrb.style.top = e.clientY + 'px';
+        });
+
+        // ===== FIREBASE OGŁOSZENIA SYSTEM =====
         
-        // Ładowanie ogłoszeń z chmury
-        async function loadOgloszeniaFromCloud() {
-            if (isLoadingOgloszenia) return;
-            isLoadingOgloszenia = true;
-
+        // Pobieranie ogłoszeń z Firebase
+        async function fetchOgloszeniaFromFirebase() {
             try {
-                const response = await fetch(JSONBIN_URL, {
-                    method: 'GET',
-                    headers: {
-                        'X-Master-Key': JSONBIN_API_KEY
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-
+                const response = await fetch(FIREBASE_URL);
+                if (!response.ok) throw new Error('Firebase error: ' + response.status);
                 const data = await response.json();
-                if (data.record && data.record.ogloszenia) {
-                    ogloszeniaData = data.record.ogloszenia;
-                } else {
-                    ogloszeniaData = [];
-                }
-
+                
+                if (!data) return [];
+                
+                // Firebase zwraca obiekt { key: value }, konwertujemy na tablicę
+                const ogloszenia = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    text: value.text || '',
+                    date: value.date || '',
+                    timestamp: value.timestamp || 0
+                }));
+                
+                // Sortowanie od najnowszego
+                ogloszenia.sort((a, b) => b.timestamp - a.timestamp);
+                
+                return ogloszenia;
             } catch (error) {
-                console.error('Błąd ładowania ogłoszeń:', error);
-                ogloszeniaData = [];
-            } finally {
-                isLoadingOgloszenia = false;
+                console.error('Błąd pobierania z Firebase:', error);
+                throw error;
             }
         }
 
-        // Zapisywanie ogłoszeń do chmury
-        async function saveOgloszeniaToCloud() {
+        // Dodawanie ogłoszenia do Firebase
+        async function addOgloszenieToFirebase(text) {
             try {
-                const response = await fetch(JSONBIN_URL, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': JSONBIN_API_KEY
-                    },
-                    body: JSON.stringify({ ogloszenia: ogloszeniaData })
+                const now = new Date();
+                const formattedDate = now.toLocaleDateString('pl-PL', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
                 });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
+                const newOgloszenie = {
+                    text: text.trim(),
+                    date: formattedDate,
+                    timestamp: Date.now(),
+                    author: 'Koks50'
+                };
 
-                return true;
+                // POST do Firebase tworzy nowy wpis z automatycznym kluczem
+                const response = await fetch(FIREBASE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newOgloszenie)
+                });
 
+                if (!response.ok) throw new Error('Firebase POST error: ' + response.status);
+                
+                const result = await response.json();
+                console.log('Ogłoszenie dodane do Firebase:', result);
+                
+                return { success: true, id: result.name };
             } catch (error) {
-                console.error('Błąd zapisywania ogłoszeń:', error);
-                return false;
+                console.error('Błąd dodawania do Firebase:', error);
+                throw error;
+            }
+        }
+
+        // Usuwanie ogłoszenia z Firebase
+        async function deleteOgloszenieFromFirebase(id) {
+            try {
+                const deleteUrl = `${FIREBASE_BASE}/ogloszenia/${id}.json`;
+                const response = await fetch(deleteUrl, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) throw new Error('Firebase DELETE error: ' + response.status);
+                
+                console.log('Ogłoszenie usunięte z Firebase:', id);
+                return true;
+            } catch (error) {
+                console.error('Błąd usuwania z Firebase:', error);
+                throw error;
+            }
+        }
+
+        // Ładowanie i renderowanie ogłoszeń
+        async function loadAndRenderOgloszenia() {
+            const list = document.getElementById('ogloszeniaList');
+            
+            if (!list) return;
+
+            // Pokaż loading
+            if (ogloszeniaData.length === 0) {
+                list.innerHTML = `
+                    <div class="ogloszenie-loading">
+                        <div class="loading-spinner"></div>
+                        <p>Ładowanie ogłoszeń z Firebase...</p>
+                    </div>`;
+            }
+
+            try {
+                isFirebaseLoading = true;
+                ogloszeniaData = await fetchOgloszeniaFromFirebase();
+                isFirebaseLoading = false;
+                renderOgloszenia();
+            } catch (error) {
+                isFirebaseLoading = false;
+                list.innerHTML = `
+                    <div class="ogloszenie-error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Nie udało się pobrać ogłoszeń.<br>Spróbuj ponownie później.</p>
+                    </div>`;
+                console.error('Błąd ładowania ogłoszeń:', error);
             }
         }
 
@@ -1264,7 +1339,7 @@
 
             list.innerHTML = ogloszeniaData.map((og, index) => `
                 <div class="ogloszenie-item">
-                    <button class="ogloszenie-delete-btn" onclick="deleteOgloszenie(${index})" title="Usuń ogłoszenie">
+                    <button class="ogloszenie-delete-btn" onclick="handleDeleteOgloszenie(${index})" title="Usuń ogłoszenie">
                         <i class="fas fa-trash"></i>
                     </button>
                     <div class="ogloszenie-date">
@@ -1275,23 +1350,8 @@
             `).join('');
         }
 
-        // Ładowanie i renderowanie
-        async function loadAndRenderOgloszenia() {
-            const list = document.getElementById('ogloszeniaList');
-            
-            list.innerHTML = `
-                <div class="ogloszenie-loading">
-                    <i class="fas fa-spinner"></i>
-                    <p>Ładowanie ogłoszeń...</p>
-                </div>
-            `;
-
-            await loadOgloszeniaFromCloud();
-            renderOgloszenia();
-        }
-
-        // Dodawanie ogłoszenia (tylko admin)
-        async function addOgloszenie(text) {
+        // Dodawanie ogłoszenia (z Firebase)
+        async function handleAddOgloszenie(text) {
             if (!isAdminLoggedIn) {
                 console.error('Nie jesteś zalogowany jako administrator');
                 return false;
@@ -1301,47 +1361,55 @@
                 return false;
             }
 
-            const now = new Date();
-            const formattedDate = now.toLocaleDateString('pl-PL', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+            try {
+                // Pokaż loading na przycisku
+                const publishBtn = document.getElementById('publishBtn');
+                const originalText = publishBtn.innerHTML;
+                publishBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publikowanie...';
+                publishBtn.disabled = true;
 
-            const newOgloszenie = {
-                text: text.trim(),
-                date: formattedDate,
-                id: Date.now()
-            };
+                // Dodaj do Firebase
+                await addOgloszenieToFirebase(text);
 
-            // Dodaj na początek tablicy
-            ogloszeniaData.unshift(newOgloszenie);
-            
-            // Zapisz do chmury
-            const success = await saveOgloszeniaToCloud();
-            
-            // Natychmiast zrenderuj
-            renderOgloszenia();
-            
-            console.log('Ogłoszenie dodane pomyślnie:', newOgloszenie);
-            return success;
+                // Odśwież listę z Firebase
+                await loadAndRenderOgloszenia();
+
+                // Przywróć przycisk
+                publishBtn.innerHTML = originalText;
+                publishBtn.disabled = false;
+
+                console.log('Ogłoszenie dodane pomyślnie');
+                return true;
+            } catch (error) {
+                // Przywróć przycisk
+                const publishBtn = document.getElementById('publishBtn');
+                publishBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Opublikuj';
+                publishBtn.disabled = false;
+
+                console.error('Błąd dodawania ogłoszenia:', error);
+                return false;
+            }
         }
 
-        // Usuwanie ogłoszenia (tylko admin)
-        window.deleteOgloszenie = async function(index) {
+        // Usuwanie ogłoszenia (z Firebase)
+        window.handleDeleteOgloszenie = async function(index) {
             if (!isAdminLoggedIn) return;
-            if (index >= 0 && index < ogloszeniaData.length) {
-                ogloszeniaData.splice(index, 1);
-                await saveOgloszeniaToCloud();
-                renderOgloszenia();
+            if (index < 0 || index >= ogloszeniaData.length) return;
+
+            const ogloszenie = ogloszeniaData[index];
+            
+            if (!confirm('Czy na pewno chcesz usunąć to ogłoszenie?')) return;
+
+            try {
+                await deleteOgloszenieFromFirebase(ogloszenie.id);
+                await loadAndRenderOgloszenia();
+            } catch (error) {
+                console.error('Błąd usuwania ogłoszenia:', error);
+                alert('Nie udało się usunąć ogłoszenia. Spróbuj ponownie.');
             }
         };
 
-        // ============================================================
-        // ADMIN MODAL
-        // ============================================================
+        // ===== ADMIN MODAL =====
         const adminModal = document.getElementById('adminModal');
         const secretTrigger = document.getElementById('secretTrigger');
         const adminModalClose = document.getElementById('adminModalClose');
@@ -1354,6 +1422,7 @@
         const publishBtn = document.getElementById('publishBtn');
         const ogloszenieText = document.getElementById('ogloszenieText');
         const publishSuccess = document.getElementById('publishSuccess');
+        const publishError = document.getElementById('publishError');
         const logoutBtn = document.getElementById('logoutBtn');
 
         function openAdminModal() {
@@ -1370,6 +1439,7 @@
                 publishView.style.display = 'block';
                 ogloszenieText.value = '';
                 publishSuccess.classList.remove('visible');
+                publishError.classList.remove('visible');
                 setTimeout(() => ogloszenieText.focus(), 400);
             }
         }
@@ -1409,6 +1479,7 @@
                 publishView.style.display = 'block';
                 ogloszenieText.value = '';
                 publishSuccess.classList.remove('visible');
+                publishError.classList.remove('visible');
                 setTimeout(() => ogloszenieText.focus(), 300);
             } else {
                 loginError.classList.add('visible');
@@ -1434,22 +1505,17 @@
                 return;
             }
 
-            // Pokaż loading na przycisku
-            const originalText = publishBtn.innerHTML;
-            publishBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publikowanie...';
-            publishBtn.disabled = true;
-
-            const success = await addOgloszenie(text);
-
-            publishBtn.innerHTML = originalText;
-            publishBtn.disabled = false;
-
+            const success = await handleAddOgloszenie(text);
+            
             if (success) {
                 publishSuccess.classList.add('visible');
+                publishError.classList.remove('visible');
                 ogloszenieText.value = '';
                 setTimeout(() => { publishSuccess.classList.remove('visible'); }, 3000);
             } else {
-                alert('Wystąpił błąd podczas publikowania.');
+                publishError.classList.add('visible');
+                publishSuccess.classList.remove('visible');
+                setTimeout(() => { publishError.classList.remove('visible'); }, 3000);
             }
         });
 
@@ -1465,12 +1531,9 @@
             isAdminLoggedIn = false;
             document.body.classList.remove('admin-active');
             closeAdminModal();
-            renderOgloszenia();
         });
 
-        // ============================================================
-        // ANIMATION HELPER
-        // ============================================================
+        // ===== ANIMATION HELPER =====
         function animateNumber(el, target, duration) {
             const start = performance.now();
             function tick(now) {
@@ -1483,9 +1546,7 @@
             requestAnimationFrame(tick);
         }
 
-        // ============================================================
-        // FETCH SOCIALS
-        // ============================================================
+        // ===== FETCH SOCIALS =====
         async function fetchTiktokFollowers() {
             const proxies = ['https://api.allorigins.win/get?url=', 'https://api.codetabs.com/v1/proxy?quest='];
             for (const proxy of proxies) {
@@ -1647,9 +1708,7 @@
             else discordTotalEl.textContent = '—';
         }
 
-        // ============================================================
-        // TILT EFFECT
-        // ============================================================
+        // ===== TILT EFFECT =====
         if (window.matchMedia('(min-width: 769px)').matches) {
             document.querySelectorAll('.sociale-card:not(.disabled)').forEach(card => {
                 card.addEventListener('mousemove', (e) => {
@@ -1665,6 +1724,10 @@
                 card.addEventListener('mouseleave', () => { card.style.transform = ''; });
             });
         }
+
+        // ===== INIT =====
+        // Ładowanie ogłoszeń przy starcie (w tle)
+        loadAndRenderOgloszenia();
     </script>
 </body>
 </html>
