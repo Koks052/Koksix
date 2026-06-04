@@ -1,0 +1,5 @@
+fetch('https://koks052.github.io/Koksix/ogloszenia.json')
+  .then(response => response.json())
+  .then(data => {
+    console.log(data); // Tutaj masz swoje ogłoszenia, które możesz wyświetlić na stronie
+  });
