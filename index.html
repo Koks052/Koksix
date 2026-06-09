@@ -6,7 +6,7 @@
     <title>KOKSIX.PL — Minecraft Content Creator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
         :root {
             --bg-deep: #060310;
@@ -283,10 +283,17 @@
             background: linear-gradient(90deg, var(--purple-primary), transparent);
         }
         .section-label::after { background: linear-gradient(270deg, var(--purple-primary), transparent); }
+        
         .section-title {
-            font-family: 'Press Start 2P', monospace; font-size: clamp(16px, 3vw, 24px);
-            line-height: 1.6; margin-bottom: 12px;
+            font-family: 'VT323', monospace;
+            font-size: clamp(42px, 6vw, 72px);
+            line-height: 1.1;
+            margin-bottom: 12px;
+            color: var(--text-white);
+            text-shadow: 0 0 20px var(--purple-glow), 0 0 40px rgba(139, 92, 246, 0.2);
+            letter-spacing: 2px;
         }
+        
         .section-subtitle { color: var(--text-muted); font-size: 15px; max-width: 480px; line-height: 1.7; }
         .section-header { margin-bottom: 56px; }
 
@@ -371,41 +378,6 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         .fetch-fallback { font-family: 'Inter', sans-serif; font-size: 11px; color: var(--text-muted); font-style: italic; }
-
-        .total-counter {
-            text-align: center; margin-top: 48px; padding: 36px;
-            background: var(--bg-card); border: 1px solid var(--glass-border);
-            border-radius: var(--radius-xl); max-width: 400px; margin-left: auto; margin-right: auto;
-            backdrop-filter: blur(12px); position: relative; overflow: hidden;
-        }
-        .total-counter::before {
-            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-            width: 60%; height: 1px;
-            background: linear-gradient(90deg, transparent, var(--purple-light), transparent);
-        }
-        .total-counter i { font-size: 32px; color: var(--purple-light); margin-bottom: 12px; text-shadow: 0 0 20px var(--purple-glow); }
-        .total-counter-label { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; }
-        .total-counter-value {
-            font-family: 'Press Start 2P', monospace; font-size: 30px; color: var(--purple-light);
-            text-shadow: 0 0 25px var(--purple-glow);
-        }
-        .discord-counter {
-            text-align: center; margin-top: 20px; padding: 24px;
-            background: var(--bg-card); border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg); max-width: 400px; margin-left: auto; margin-right: auto;
-            backdrop-filter: blur(12px); position: relative; overflow: hidden;
-        }
-        .discord-counter::before {
-            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-            width: 60%; height: 1px;
-            background: linear-gradient(90deg, transparent, #5865f2, transparent);
-        }
-        .discord-counter i { font-size: 28px; color: #5865f2; margin-bottom: 10px; text-shadow: 0 0 15px rgba(88, 101, 242, 0.4); }
-        .discord-counter-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
-        .discord-counter-value {
-            font-family: 'Press Start 2P', monospace; font-size: 24px; color: #5865f2;
-            text-shadow: 0 0 20px rgba(88, 101, 242, 0.4);
-        }
 
         .about-container { max-width: 700px; margin: 0 auto; text-align: center; }
         .about-text-center h3 { font-size: 22px; font-weight: 800; margin-bottom: 18px; line-height: 1.4; }
@@ -540,14 +512,24 @@
         .ogloszenie-empty i { font-size: 48px; color: var(--glass-border); margin-bottom: 16px; display: block; }
         .ogloszenie-empty p { font-size: 15px; line-height: 1.6; }
         .ogloszenie-delete-btn {
-            position: absolute; top: 12px; right: 12px; width: 28px; height: 28px;
+            position: absolute; top: 12px; right: 12px; width: 32px; height: 32px;
             border-radius: 50%; background: rgba(239, 68, 68, 0.15);
             border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444;
             cursor: pointer; display: none; align-items: center; justify-content: center;
-            font-size: 12px; transition: all 0.3s var(--ease-spring);
+            font-size: 14px; transition: all 0.3s var(--ease-spring);
+            z-index: 10;
         }
         body.admin-active .ogloszenie-delete-btn { display: flex; }
-        .ogloszenie-delete-btn:hover { background: rgba(239, 68, 68, 0.3); transform: scale(1.15); }
+        .ogloszenie-delete-btn:hover { 
+            background: rgba(239, 68, 68, 0.3); 
+            transform: scale(1.15);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+        }
+        .ogloszenie-delete-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
 
         .ogloszenie-loading {
             text-align: center; padding: 40px 24px; color: var(--text-muted);
@@ -607,7 +589,8 @@
         .admin-modal-close:hover { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: #ef4444; transform: scale(1.1); }
 
         .admin-modal h3 {
-            font-family: 'Press Start 2P', monospace; font-size: 14px;
+            font-family: 'VT323', monospace;
+            font-size: 28px;
             color: var(--purple-light); margin-bottom: 8px;
             text-shadow: 0 0 10px var(--purple-glow);
         }
@@ -735,8 +718,6 @@
         @media (max-width: 480px) {
             .hero-buttons { flex-direction: column; width: 100%; max-width: 280px; margin: 0 auto; }
             .btn { justify-content: center; width: 100%; }
-            .total-counter-value { font-size: 22px; }
-            .discord-counter-value { font-size: 20px; }
         }
     </style>
 </head>
@@ -752,15 +733,12 @@
     <div class="floating-shapes" id="floatingShapes"></div>
     <div class="tab-transition-overlay" id="tabOverlay"></div>
 
-    <!-- SECRET TRIGGER -->
     <div class="secret-trigger" id="secretTrigger" title=""></div>
 
-    <!-- ADMIN MODAL -->
     <div class="admin-modal-overlay" id="adminModal">
         <div class="admin-modal">
             <button class="admin-modal-close" id="adminModalClose"><i class="fas fa-times"></i></button>
 
-            <!-- LOGIN VIEW -->
             <div id="loginView">
                 <h3><i class="fas fa-shield-alt"></i> Panel Administratora</h3>
                 <p class="modal-subtitle">Zaloguj się, aby zarządzać ogłoszeniami</p>
@@ -778,7 +756,6 @@
                 </button>
             </div>
 
-            <!-- PUBLISH VIEW -->
             <div id="publishView" style="display: none;">
                 <h3><i class="fas fa-bullhorn"></i> Panel Ogłoszeń</h3>
                 <div class="admin-badge"><i class="fas fa-check-circle"></i> Zalogowano jako: Koks50</div>
@@ -801,7 +778,6 @@
         </div>
     </div>
 
-    <!-- NAVBAR -->
     <nav class="navbar" id="navbar">
         <div class="nav-inner">
             <div class="nav-logo" id="logoBtn">
@@ -831,7 +807,6 @@
         </div>
     </nav>
 
-    <!-- TAB: STRONA GŁÓWNA -->
     <div class="tab-page active" id="tab-home">
         <canvas class="tab-canvas-bg" id="canvas-home"></canvas>
         <section class="hero">
@@ -848,7 +823,6 @@
         </section>
     </div>
 
-    <!-- TAB: SOCIALE -->
     <div class="tab-page" id="tab-sociale">
         <canvas class="tab-canvas-bg" id="canvas-sociale"></canvas>
         <section class="section">
@@ -874,7 +848,7 @@
                     <div class="sociale-count-label">subskrybentów</div>
                     <span class="sociale-btn">Subskrybuj</span>
                 </a>
-                <a href="https://discord.gg/axEau9f3" target="_blank" rel="noopener" class="sociale-card card-discord" id="cardDiscord">
+                <a href="https://discord.gg/c7mtdM59fA" target="_blank" rel="noopener" class="sociale-card card-discord" id="cardDiscord">
                     <div class="sociale-icon"><i class="fab fa-discord"></i></div>
                     <div class="sociale-name">Discord</div>
                     <div class="sociale-handle">Koksix Community</div>
@@ -908,26 +882,15 @@
                 <div class="sociale-card card-server disabled">
                     <div class="sociale-icon"><i class="fas fa-cube"></i></div>
                     <div class="sociale-name">Serwer MC</div>
-                    <div class="sociale-handle">koksix.icsv.pl</div>
+                    <div class="sociale-handle">Wkrótce dostępny</div>
                     <div class="sociale-count"><span class="badge-soon"><i class="fas fa-clock"></i> Wkrótce</span></div>
                     <div class="sociale-count-label"></div>
                     <span class="sociale-btn" style="opacity:0.4;">Wkrótce</span>
                 </div>
             </div>
-            <div class="total-counter">
-                <i class="fas fa-users"></i>
-                <div class="total-counter-label">Łączna liczba obserwujących</div>
-                <div class="total-counter-value" id="totalCount">0</div>
-            </div>
-            <div class="discord-counter">
-                <i class="fab fa-discord"></i>
-                <div class="discord-counter-label">Członkowie serwera Discord</div>
-                <div class="discord-counter-value" id="discordTotal">0</div>
-            </div>
         </section>
     </div>
 
-    <!-- TAB: OGŁOSZENIA -->
     <div class="tab-page" id="tab-ogloszenia">
         <canvas class="tab-canvas-bg" id="canvas-ogloszenia"></canvas>
         <section class="section">
@@ -945,7 +908,6 @@
         </section>
     </div>
 
-    <!-- TAB: O MNIE -->
     <div class="tab-page" id="tab-omnie">
         <canvas class="tab-canvas-bg" id="canvas-omnie"></canvas>
         <section class="section">
@@ -956,11 +918,11 @@
             <div class="about-container">
                 <div class="about-text-center">
                     <h3>Tworzę treści związane z <span>Minecraftem</span></h3>
-                    <p> Cześć, tu Koksix!<br><br>Tworzę treści związane z Minecraftem i regularnie prowadzę transmisje na żywo na TikToku. Gram razem z widzami na różnych serwerach pełnych eventów, wyzwań i ciekawych przygód. Organizuję także własne eventy na moim serwerze, gdzie każdy może dołączyć i świetnie się bawić.<br><br>Jeśli lubisz Minecrafta, wspólną grę i aktywną społeczność, jesteś we właściwym miejscu. Do zobaczenia na live! </p>
+                    <p>Cześć, tu Koksix!<br><br>Tworzę treści związane z Minecraftem i regularnie prowadzę transmisje na żywo na TikToku. Gram razem z widzami na różnych serwerach pełnych eventów, wyzwań i ciekawych przygód. Organizuję także własne eventy na moim serwerze, gdzie każdy może dołączyć i świetnie się bawić.<br><br>Jeśli lubisz Minecrafta, wspólną grę i aktywną społeczność, jesteś we właściwym miejscu. Do zobaczenia na live!</p>
                     <div class="about-stats">
                         <div class="about-stat"><i class="fas fa-gamepad"></i><div><div class="stat-label">Pasja</div><div class="stat-value">Minecraft</div></div></div>
                         <div class="about-stat"><i class="fas fa-heart"></i><div><div class="stat-label">Społeczność</div><div class="stat-value">Najważniejsza!</div></div></div>
-                        <div class="about-stat"><i class="fas fa-trophy"></i><div><div class="stat-label">Doświadczenie</div><div class="stat-value">Od 2018 roku</div></div></div>
+                        <div class="about-stat"><i class="fas fa-trophy"></i><div><div class="stat-label">Doświadczenie</div><div class="stat-value">Od 2013 roku</div></div></div>
                         <div class="about-stat"><i class="fas fa-star"></i><div><div class="stat-label">Dzięki!</div><div class="stat-value">Za każde wsparcie</div></div></div>
                     </div>
                 </div>
@@ -968,7 +930,6 @@
         </section>
     </div>
 
-    <!-- TAB: KONTAKT -->
     <div class="tab-page" id="tab-kontakt">
         <canvas class="tab-canvas-bg" id="canvas-kontakt"></canvas>
         <section class="section">
@@ -982,9 +943,9 @@
                     <div class="contact-items">
                         <div class="contact-item"><i class="fab fa-tiktok"></i><span>TikTok: <strong>@koksixx_</strong></span></div>
                         <div class="contact-item"><i class="fab fa-discord"></i><span>Discord: <strong>koksix99</strong></span></div>
-                        <div class="contact-item"><i class="fas fa-at"></i><span>E-mail: <strong>koksix@gmail.com</strong></span></div>
+                        <div class="contact-item"><i class="fas fa-at"></i><span>E-mail: <strong>koksix99@gmail.com</strong></span></div>
                     </div>
-                    <a href="mailto:koksix@gmail.com" class="btn-email"><i class="fas fa-paper-plane"></i> Napisz do mnie</a>
+                    <a href="mailto:koksix99@gmail.com" class="btn-email"><i class="fas fa-paper-plane"></i> Napisz do mnie</a>
                 </div>
                 <div class="kontakt-card">
                     <div class="kontakt-card-title"><i class="fas fa-globe"></i> Moja Domena</div>
@@ -995,8 +956,7 @@
                 <div class="kontakt-card">
                     <div class="kontakt-card-title"><i class="fas fa-cube"></i> Serwer Minecraft</div>
                     <div class="server-badge-green"><span class="dot"></span> W przygotowaniu</div>
-                    <div class="domain-name" style="font-size:13px; margin-bottom:14px;">koksix.icsv.pl</div>
-                    <p class="server-text"><strong>Mój własny serwer Minecraft już wkrótce!</strong><br>Przygotowuję coś specjalnego. Śledźcie social media! 🚀</p>
+                    <p class="server-text"><strong>Mój własny serwer Minecraft już wkrótce!</strong><br>Przygotowuję coś specjalnego. Śledźcie social media!</p>
                     <button class="btn-server"><i class="fas fa-info-circle"></i> Dowiedz się więcej</button>
                 </div>
             </div>
@@ -1012,20 +972,17 @@
     </footer>
 
     <script>
-        // ===== CONSTANTS =====
         const ADMIN_LOGIN = 'Koks50';
         const ADMIN_PASSWORD = 'Koksix12';
         const FIREBASE_URL = 'https://koksix-default-rtdb.firebaseio.com/ogloszenia.json';
         const FIREBASE_BASE = 'https://koksix-default-rtdb.firebaseio.com';
 
-        // ===== STATE =====
         let currentTab = 'home';
         let isTransitioning = false;
         let isAdminLoggedIn = false;
         let ogloszeniaData = [];
         let isFirebaseLoading = false;
 
-        // ===== TAB SWITCHING =====
         function switchTab(tabName) {
             if (tabName === currentTab || isTransitioning) return;
             isTransitioning = true;
@@ -1080,7 +1037,6 @@
 
         document.getElementById('logoBtn').addEventListener('click', () => switchTab('home'));
 
-        // ===== NAVBAR =====
         const navbar = document.getElementById('navbar');
         const navToggle = document.getElementById('navToggle');
 
@@ -1093,7 +1049,6 @@
             navbar.classList.toggle('scrolled', window.scrollY > 50);
         });
 
-        // ===== BACKGROUND ANIMATIONS =====
         const tabCanvases = {
             home: document.getElementById('canvas-home'),
             sociale: document.getElementById('canvas-sociale'),
@@ -1171,7 +1126,6 @@
             });
         });
 
-        // Floating shapes
         const floatingContainer = document.getElementById('floatingShapes');
         function createFloatingShape() {
             const shape = document.createElement('div');
@@ -1190,18 +1144,29 @@
         for (let i = 0; i < 12; i++) createFloatingShape();
         setInterval(createFloatingShape, 3000);
 
-        // Mouse orb
         const mouseOrb = document.createElement('div');
-        mouseOrb.style.cssText = 'position:fixed;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.08),transparent 70%);pointer-events:none;z-index:0;transition:left 0.3s ease-out,top 0.3s ease-out;transform:translate(-50%,-50%);top:72px;left:50%;';
+        mouseOrb.style.cssText = 'position:fixed;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.10),transparent 70%);pointer-events:none;z-index:0;transform:translate(-50%,-50%);top:0;left:0;';
         document.body.appendChild(mouseOrb);
+
+        let orbX = window.innerWidth / 2;
+        let orbY = window.innerHeight / 2;
+        let targetX = orbX;
+        let targetY = orbY;
+
         document.addEventListener('mousemove', (e) => {
-            mouseOrb.style.left = e.clientX + 'px';
-            mouseOrb.style.top = e.clientY + 'px';
+            targetX = e.clientX;
+            targetY = e.clientY;
         });
 
-        // ===== FIREBASE OGŁOSZENIA SYSTEM =====
-        
-        // Pobieranie ogłoszeń z Firebase
+        function animateOrb() {
+            orbX += (targetX - orbX) * 0.08;
+            orbY += (targetY - orbY) * 0.08;
+            mouseOrb.style.left = orbX + 'px';
+            mouseOrb.style.top = orbY + 'px';
+            requestAnimationFrame(animateOrb);
+        }
+        animateOrb();
+
         async function fetchOgloszeniaFromFirebase() {
             try {
                 const response = await fetch(FIREBASE_URL);
@@ -1210,7 +1175,6 @@
                 
                 if (!data) return [];
                 
-                // Firebase zwraca obiekt { key: value }, konwertujemy na tablicę
                 const ogloszenia = Object.entries(data).map(([key, value]) => ({
                     id: key,
                     text: value.text || '',
@@ -1218,7 +1182,6 @@
                     timestamp: value.timestamp || 0
                 }));
                 
-                // Sortowanie od najnowszego
                 ogloszenia.sort((a, b) => b.timestamp - a.timestamp);
                 
                 return ogloszenia;
@@ -1228,7 +1191,6 @@
             }
         }
 
-        // Dodawanie ogłoszenia do Firebase
         async function addOgloszenieToFirebase(text) {
             try {
                 const now = new Date();
@@ -1247,7 +1209,6 @@
                     author: 'Koks50'
                 };
 
-                // POST do Firebase tworzy nowy wpis z automatycznym kluczem
                 const response = await fetch(FIREBASE_URL, {
                     method: 'POST',
                     headers: {
@@ -1268,7 +1229,6 @@
             }
         }
 
-        // Usuwanie ogłoszenia z Firebase
         async function deleteOgloszenieFromFirebase(id) {
             try {
                 const deleteUrl = `${FIREBASE_BASE}/ogloszenia/${id}.json`;
@@ -1286,13 +1246,11 @@
             }
         }
 
-        // Ładowanie i renderowanie ogłoszeń
         async function loadAndRenderOgloszenia() {
             const list = document.getElementById('ogloszeniaList');
             
             if (!list) return;
 
-            // Pokaż loading
             if (ogloszeniaData.length === 0) {
                 list.innerHTML = `
                     <div class="ogloszenie-loading">
@@ -1339,7 +1297,7 @@
 
             list.innerHTML = ogloszeniaData.map((og, index) => `
                 <div class="ogloszenie-item">
-                    <button class="ogloszenie-delete-btn" onclick="handleDeleteOgloszenie(${index})" title="Usuń ogłoszenie">
+                    <button class="ogloszenie-delete-btn" onclick="handleDeleteOgloszenie(${index})" title="Usuń ogłoszenie" data-id="${og.id}">
                         <i class="fas fa-trash"></i>
                     </button>
                     <div class="ogloszenie-date">
@@ -1350,7 +1308,6 @@
             `).join('');
         }
 
-        // Dodawanie ogłoszenia (z Firebase)
         async function handleAddOgloszenie(text) {
             if (!isAdminLoggedIn) {
                 console.error('Nie jesteś zalogowany jako administrator');
@@ -1362,26 +1319,21 @@
             }
 
             try {
-                // Pokaż loading na przycisku
                 const publishBtn = document.getElementById('publishBtn');
                 const originalText = publishBtn.innerHTML;
                 publishBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publikowanie...';
                 publishBtn.disabled = true;
 
-                // Dodaj do Firebase
                 await addOgloszenieToFirebase(text);
 
-                // Odśwież listę z Firebase
                 await loadAndRenderOgloszenia();
 
-                // Przywróć przycisk
                 publishBtn.innerHTML = originalText;
                 publishBtn.disabled = false;
 
                 console.log('Ogłoszenie dodane pomyślnie');
                 return true;
             } catch (error) {
-                // Przywróć przycisk
                 const publishBtn = document.getElementById('publishBtn');
                 publishBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Opublikuj';
                 publishBtn.disabled = false;
@@ -1391,25 +1343,37 @@
             }
         }
 
-        // Usuwanie ogłoszenia (z Firebase)
         window.handleDeleteOgloszenie = async function(index) {
-            if (!isAdminLoggedIn) return;
-            if (index < 0 || index >= ogloszeniaData.length) return;
+            if (!isAdminLoggedIn) {
+                return;
+            }
+            
+            if (index < 0 || index >= ogloszeniaData.length) {
+                console.error('Nieprawidłowy indeks:', index);
+                return;
+            }
 
             const ogloszenie = ogloszeniaData[index];
+            const deleteBtn = document.querySelector(`.ogloszenie-delete-btn[data-id="${ogloszenie.id}"]`);
             
-            if (!confirm('Czy na pewno chcesz usunąć to ogłoszenie?')) return;
+            if (deleteBtn) {
+                deleteBtn.disabled = true;
+                deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            }
 
             try {
                 await deleteOgloszenieFromFirebase(ogloszenie.id);
                 await loadAndRenderOgloszenia();
+                console.log('Ogłoszenie usunięte pomyślnie');
             } catch (error) {
                 console.error('Błąd usuwania ogłoszenia:', error);
-                alert('Nie udało się usunąć ogłoszenia. Spróbuj ponownie.');
+                if (deleteBtn) {
+                    deleteBtn.disabled = false;
+                    deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+                }
             }
         };
 
-        // ===== ADMIN MODAL =====
         const adminModal = document.getElementById('adminModal');
         const secretTrigger = document.getElementById('secretTrigger');
         const adminModalClose = document.getElementById('adminModalClose');
@@ -1466,7 +1430,6 @@
             }
         });
 
-        // LOGIN
         loginBtn.addEventListener('click', () => {
             const user = loginUserInput.value.trim();
             const pass = loginPassInput.value;
@@ -1481,6 +1444,10 @@
                 publishSuccess.classList.remove('visible');
                 publishError.classList.remove('visible');
                 setTimeout(() => ogloszenieText.focus(), 300);
+                
+                if (currentTab === 'ogloszenia') {
+                    loadAndRenderOgloszenia();
+                }
             } else {
                 loginError.classList.add('visible');
                 loginPassInput.value = '';
@@ -1495,7 +1462,6 @@
             if (e.key === 'Enter') { e.preventDefault(); loginPassInput.focus(); }
         });
 
-        // PUBLISH
         publishBtn.addEventListener('click', async () => {
             const text = ogloszenieText.value.trim();
             if (!text) {
@@ -1526,14 +1492,16 @@
             }
         });
 
-        // LOGOUT
         logoutBtn.addEventListener('click', () => {
             isAdminLoggedIn = false;
             document.body.classList.remove('admin-active');
             closeAdminModal();
+            
+            if (currentTab === 'ogloszenia') {
+                loadAndRenderOgloszenia();
+            }
         });
 
-        // ===== ANIMATION HELPER =====
         function animateNumber(el, target, duration) {
             const start = performance.now();
             function tick(now) {
@@ -1546,17 +1514,73 @@
             requestAnimationFrame(tick);
         }
 
-        // ===== FETCH SOCIALS =====
         async function fetchTiktokFollowers() {
-            const proxies = ['https://api.allorigins.win/get?url=', 'https://api.codetabs.com/v1/proxy?quest='];
+            const targetUrl = 'https://www.tiktok.com/@koksixx_';
+            
+            const proxies = [
+                { url: 'https://api.allorigins.win/get?url=', type: 'allorigins' },
+                { url: 'https://api.codetabs.com/v1/proxy?quest=', type: 'text' },
+                { url: 'https://corsproxy.io/?', type: 'text' }
+            ];
+            
             for (const proxy of proxies) {
                 try {
-                    const resp = await fetch(proxy + encodeURIComponent('https://www.tiktok.com/@koksixx_'), { signal: AbortSignal.timeout(10000) });
+                    const fetchUrl = proxy.url + encodeURIComponent(targetUrl);
+                    const resp = await fetch(fetchUrl, { 
+                        signal: AbortSignal.timeout(15000),
+                        headers: {
+                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+                        }
+                    });
+                    
                     if (!resp.ok) continue;
+                    
                     let html = '';
-                    if (proxy.includes('allorigins')) { const j = await resp.json(); html = j.contents || ''; }
-                    else { html = await resp.text(); }
-                    if (!html) continue;
+                    if (proxy.type === 'allorigins') { 
+                        const j = await resp.json(); 
+                        html = j.contents || ''; 
+                    } else { 
+                        html = await resp.text(); 
+                    }
+                    
+                    if (!html || html.length < 500) continue;
+                    
+                    const sigiMatch = html.match(/<script\s+id="SIGI_STATE"[^>]*>([\s\S]*?)<\/script>/i);
+                    if (sigiMatch) {
+                        try {
+                            const sigiData = JSON.parse(sigiMatch[1]);
+                            if (sigiData && sigiData.UserModule && sigiData.UserModule.users) {
+                                const users = sigiData.UserModule.users;
+                                for (const key of Object.keys(users)) {
+                                    const user = users[key];
+                                    if (user && user.stats && user.stats.followerCount) {
+                                        const count = parseInt(user.stats.followerCount);
+                                        if (!isNaN(count) && count > 0) return count;
+                                    }
+                                }
+                            }
+                        } catch(e) {}
+                    }
+                    
+                    const universalMatch = html.match(/__UNIVERSAL_DATA_FOR_REHYDRATION__\s*=\s*({[\s\S]*?});?\s*<\/script>/i);
+                    if (universalMatch) {
+                        try {
+                            const universalData = JSON.parse(universalMatch[1]);
+                            if (universalData && universalData.__DEFAULT_SCOPE__) {
+                                const scope = universalData.__DEFAULT_SCOPE__;
+                                if (scope['user/detail'] && scope['user/detail'].userInfo && scope['user/detail'].userInfo.stats) {
+                                    const count = parseInt(scope['user/detail'].userInfo.stats.followerCount);
+                                    if (!isNaN(count) && count > 0) return count;
+                                }
+                                if (scope['user/profile'] && scope['user/profile'].userInfo && scope['user/profile'].userInfo.stats) {
+                                    const count = parseInt(scope['user/profile'].userInfo.stats.followerCount);
+                                    if (!isNaN(count) && count > 0) return count;
+                                }
+                            }
+                        } catch(e) {}
+                    }
+                    
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(html, 'text/html');
                     const jsonScripts = doc.querySelectorAll('script[type="application/ld+json"]');
@@ -1565,7 +1589,8 @@
                             const json = JSON.parse(script.textContent);
                             if (json && json.interactionStatistic) {
                                 for (const stat of json.interactionStatistic) {
-                                    if (stat.interactionType && (stat.interactionType.name === 'Follow' || stat.interactionType === 'Follow')) {
+                                    if (stat.interactionType && 
+                                        (stat.interactionType.name === 'Follow' || stat.interactionType === 'Follow')) {
                                         const count = parseInt(stat.userInteractionCount);
                                         if (!isNaN(count) && count > 0) return count;
                                     }
@@ -1573,6 +1598,20 @@
                             }
                         } catch(e) {}
                     }
+                    
+                    const metaDesc = doc.querySelector('meta[name="description"]');
+                    if (metaDesc) {
+                        const text = metaDesc.getAttribute('content') || '';
+                        const match = text.match(/([\d,.]+)\s*([KM]?)\s*Followers/i);
+                        if (match) {
+                            let num = parseFloat(match[1].replace(/,/g, ''));
+                            if (match[2] === 'K' || match[2] === 'k') num *= 1000;
+                            else if (match[2] === 'M' || match[2] === 'm') num *= 1000000;
+                            num = Math.round(num);
+                            if (!isNaN(num) && num > 0) return num;
+                        }
+                    }
+                    
                     const ogDesc = doc.querySelector('meta[property="og:description"]');
                     if (ogDesc) {
                         const text = ogDesc.getAttribute('content') || '';
@@ -1585,35 +1624,35 @@
                             if (!isNaN(num) && num > 0) return num;
                         }
                     }
+                    
                     const bodyText = doc.body ? (doc.body.textContent || '') : '';
-                    const patterns = [/([\d,.]+)\s*([KM]?)\s*Followers/i, /([\d,.]+)\s*([KM]?)\s*obserwujących/i];
+                    const patterns = [
+                        /"followerCount"\s*:\s*(\d+)/,
+                        /followerCount["\s:=]+(\d+)/,
+                        /([\d,.]+)\s*([KM]?)\s*Followers/i,
+                        /([\d,.]+)\s*([KM]?)\s*obserwujacych/i,
+                        /([\d,.]+)\s*([KM]?)\s*followers/i
+                    ];
+                    
                     for (const pattern of patterns) {
                         const m = bodyText.match(pattern);
                         if (m) {
-                            let num = parseFloat(m[1].replace(/,/g, ''));
-                            if (m[2] === 'K' || m[2] === 'k') num *= 1000;
-                            else if (m[2] === 'M' || m[2] === 'm') num *= 1000000;
-                            num = Math.round(num);
-                            if (!isNaN(num) && num > 0) return num;
+                            let num;
+                            if (pattern.source.includes('followerCount')) {
+                                num = parseInt(m[1]);
+                            } else {
+                                num = parseFloat(m[1].replace(/,/g, ''));
+                                if (m[2] === 'K' || m[2] === 'k') num *= 1000;
+                                else if (m[2] === 'M' || m[2] === 'm') num *= 1000000;
+                                num = Math.round(num);
+                            }
+                            if (!isNaN(num) && num > 0 && num < 100000000) return num;
                         }
                     }
-                    try {
-                        const apiFetch = proxy + encodeURIComponent('https://www.tiktok.com/api/user/detail/?uniqueId=koksixx_');
-                        const apiResp = await fetch(apiFetch, { signal: AbortSignal.timeout(8000) });
-                        if (apiResp.ok) {
-                            let apiData = '';
-                            if (proxy.includes('allorigins')) { const j = await apiResp.json(); apiData = j.contents || ''; }
-                            else { apiData = await apiResp.text(); }
-                            if (apiData) {
-                                const apiJson = JSON.parse(apiData);
-                                if (apiJson && apiJson.userInfo && apiJson.userInfo.stats) {
-                                    const count = parseInt(apiJson.userInfo.stats.followerCount);
-                                    if (!isNaN(count) && count > 0) return count;
-                                }
-                            }
-                        }
-                    } catch(e) {}
-                } catch(e) { continue; }
+                    
+                } catch(e) { 
+                    continue; 
+                }
             }
             return 0;
         }
@@ -1666,7 +1705,7 @@
 
         async function fetchDiscordMembers() {
             try {
-                const resp = await fetch('https://discord.com/api/v9/invites/axEau9f3?with_counts=true&with_expiration=true',
+                const resp = await fetch('https://discord.com/api/v9/invites/c7mtdM59fA?with_counts=true&with_expiration=true',
                     { headers: { 'Accept': 'application/json' }, signal: AbortSignal.timeout(10000) });
                 if (!resp.ok) throw new Error('HTTP error');
                 const data = await resp.json();
@@ -1680,8 +1719,6 @@
             const tiktokEl = document.getElementById('tiktokCount');
             const youtubeEl = document.getElementById('youtubeCount');
             const discordEl = document.getElementById('discordCount');
-            const totalEl = document.getElementById('totalCount');
-            const discordTotalEl = document.getElementById('discordTotal');
 
             const [tiktokResult, youtubeResult, discordResult] = await Promise.allSettled([
                 fetchTiktokFollowers(), fetchYoutubeSubscribers(), fetchDiscordMembers()
@@ -1699,16 +1736,8 @@
 
             if (discordVal > 0 && discordEl) animateNumber(discordEl, discordVal, 2000);
             else if (discordEl) discordEl.innerHTML = '<span class="fetch-fallback">Sprawdź →</span>';
-
-            const observersTotal = tiktokVal + youtubeVal;
-            if (observersTotal > 0) setTimeout(() => animateNumber(totalEl, observersTotal, 2500), 400);
-            else totalEl.textContent = '—';
-
-            if (discordVal > 0 && discordTotalEl) setTimeout(() => animateNumber(discordTotalEl, discordVal, 2500), 600);
-            else discordTotalEl.textContent = '—';
         }
 
-        // ===== TILT EFFECT =====
         if (window.matchMedia('(min-width: 769px)').matches) {
             document.querySelectorAll('.sociale-card:not(.disabled)').forEach(card => {
                 card.addEventListener('mousemove', (e) => {
@@ -1725,8 +1754,6 @@
             });
         }
 
-        // ===== INIT =====
-        // Ładowanie ogłoszeń przy starcie (w tle)
         loadAndRenderOgloszenia();
     </script>
 </body>
