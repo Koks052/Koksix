@@ -10,7 +10,7 @@
 
         :root {
             --bg-deep: #060310;
-            --bg-card: rgba(14, 9, 30, 0.7);
+            --bg-card: rgba(14, 9, 30, 0.75);
             --bg-card-hover: rgba(20, 14, 45, 0.9);
             --purple-primary: #8a2be2;
             --purple-light: #a855f7;
@@ -46,7 +46,16 @@
             min-height: 100vh;
         }
 
-        .bg-grid {
+        .bg-static {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background: 
+                radial-gradient(ellipse 80% 60% at 50% 0%, rgba(109, 40, 217, 0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 50% at 80% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 40% at 10% 60%, rgba(168, 85, 247, 0.06) 0%, transparent 50%),
+                linear-gradient(180deg, #060310 0%, #0a0520 50%, #060310 100%);
+        }
+
+        .bg-grid-overlay {
             position: fixed; inset: 0; z-index: 0; pointer-events: none;
             background-image:
                 linear-gradient(rgba(139, 92, 246, 0.03) 1px, transparent 1px),
@@ -54,51 +63,50 @@
             background-size: 60px 60px;
         }
 
-        .bg-orbs {
+        .bg-center-image {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 550px; height: auto;
+            max-width: 90vw;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+            filter: grayscale(10%) drop-shadow(0 0 40px rgba(139, 92, 246, 0.2));
+        }
+
+        .particles-container {
             position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
         }
 
-        .bg-orb {
-            position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.35;
-            animation: orbFloat 20s ease-in-out infinite;
+        .particle {
+            position: absolute; bottom: -10px;
+            width: 3px; height: 3px;
+            background: var(--purple-light);
+            border-radius: 50%;
+            box-shadow: 0 0 6px var(--purple-glow);
+            animation: floatUp linear infinite;
         }
 
-        .bg-orb:nth-child(1) {
-            width: 500px; height: 500px;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.3), transparent 70%);
-            top: -10%; right: -5%;
-        }
-        .bg-orb:nth-child(2) {
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(168, 85, 247, 0.2), transparent 70%);
-            bottom: 10%; left: -5%;
-            animation-delay: -7s; animation-duration: 25s;
-        }
-        .bg-orb:nth-child(3) {
-            width: 300px; height: 300px;
-            background: radial-gradient(circle, rgba(109, 40, 217, 0.25), transparent 70%);
-            top: 40%; left: 30%;
-            animation-delay: -14s; animation-duration: 30s;
-        }
-
-        @keyframes orbFloat {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            25% { transform: translate(30px, -40px) scale(1.05); }
-            50% { transform: translate(-20px, 20px) scale(0.95); }
-            75% { transform: translate(40px, 30px) scale(1.02); }
+        @keyframes floatUp {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 0.8; }
+            50% { opacity: 0.6; }
+            90% { opacity: 0.2; }
+            100% { transform: translateY(-100vh) translateX(30px); opacity: 0; }
         }
 
         .navbar {
             position: fixed; top: 0; left: 0; width: 100%; z-index: 9999;
-            background: rgba(6, 3, 16, 0.7);
-            backdrop-filter: blur(24px) saturate(1.5);
-            -webkit-backdrop-filter: blur(24px) saturate(1.5);
-            border-bottom: 1px solid rgba(139, 92, 246, 0.08);
+            background: rgba(6, 3, 16, 0.85);
+            backdrop-filter: blur(20px) saturate(1.4);
+            -webkit-backdrop-filter: blur(20px) saturate(1.4);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
             transition: all 0.5s var(--ease-out-expo);
         }
         .navbar.scrolled {
             background: rgba(6, 3, 16, 0.95);
-            box-shadow: 0 1px 40px rgba(0,0,0,0.5), 0 0 1px rgba(139, 92, 246, 0.2);
+            box-shadow: 0 1px 30px rgba(0,0,0,0.5), 0 0 1px rgba(139, 92, 246, 0.2);
         }
         .nav-inner {
             max-width: 1280px; margin: 0 auto; padding: 0 28px; height: 72px;
@@ -106,14 +114,13 @@
         }
         .nav-logo {
             font-family: 'Press Start 2P', monospace; font-size: 12px; color: var(--text-white);
-            text-decoration: none; letter-spacing: 1px; display: flex; align-items: center; gap: 8px;
+            text-decoration: none; letter-spacing: 1px; display: flex; align-items: center; gap: 10px;
             cursor: pointer;
         }
-        .nav-logo .logo-icon {
-            width: 32px; height: 32px;
-            background: linear-gradient(135deg, var(--purple-primary), var(--purple-light));
-            border-radius: 8px; display: flex; align-items: center; justify-content: center;
-            font-size: 14px; box-shadow: 0 0 15px var(--purple-glow);
+        .nav-logo-img {
+            width: 36px; height: 36px; border-radius: 8px; object-fit: cover;
+            border: 2px solid rgba(139, 92, 246, 0.4);
+            box-shadow: 0 0 12px rgba(139, 92, 246, 0.3);
         }
 
         .nav-tabs { display: flex; align-items: center; gap: 2px; position: relative; }
@@ -125,36 +132,29 @@
             border: none; background: none; transition: all 0.3s var(--ease-out-expo);
             border-radius: var(--radius-md); overflow: hidden;
         }
-
         .nav-tab::before {
             content: ''; position: absolute; inset: 0;
             background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(168, 85, 247, 0.05));
             border-radius: var(--radius-md); opacity: 0; transition: opacity 0.3s var(--ease-out-expo);
         }
-
         .nav-tab:hover { color: var(--text-white); }
         .nav-tab:hover::before { opacity: 1; }
-
         .nav-tab.active {
             color: var(--text-white);
             background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(168, 85, 247, 0.1));
             box-shadow: 0 0 25px rgba(139, 92, 246, 0.15), inset 0 1px 0 rgba(255,255,255,0.05);
         }
-
         .nav-tab.active::before { opacity: 1; }
-
         .nav-tab.active::after {
             content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
             width: 24px; height: 2px; background: var(--purple-light); border-radius: 2px;
             box-shadow: 0 0 10px var(--purple-glow), 0 0 20px rgba(139, 92, 246, 0.3);
             animation: tabGlow 2s ease-in-out infinite;
         }
-
         @keyframes tabGlow {
             0%, 100% { box-shadow: 0 0 10px var(--purple-glow), 0 0 20px rgba(139, 92, 246, 0.3); width: 24px; }
             50% { box-shadow: 0 0 15px var(--purple-glow), 0 0 30px rgba(139, 92, 246, 0.5); width: 32px; }
         }
-
         .nav-tab .tab-icon { font-size: 14px; transition: transform 0.3s var(--ease-spring); }
         .nav-tab:hover .tab-icon { transform: scale(1.2); }
         .nav-tab.active .tab-icon { text-shadow: 0 0 10px var(--purple-glow); }
@@ -178,7 +178,6 @@
         .tab-page.active { display: block; }
         .tab-page.anim-in { animation: pageSlideIn 0.6s var(--ease-out-expo) forwards; }
         .tab-page.anim-out { animation: pageSlideOut 0.4s var(--ease-out-expo) forwards; }
-
         @keyframes pageSlideIn {
             from { opacity: 0; transform: translateY(30px) scale(0.98); filter: blur(4px); }
             to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
@@ -186,11 +185,6 @@
         @keyframes pageSlideOut {
             from { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
             to { opacity: 0; transform: translateY(-20px) scale(0.98); filter: blur(4px); }
-        }
-
-        .tab-canvas-bg {
-            position: fixed; top: 72px; left: 0; width: 100%;
-            height: calc(100% - 72px); pointer-events: none; z-index: 0;
         }
 
         .hero {
@@ -269,10 +263,7 @@
             50% { transform: translateX(-50%) translateY(12px); opacity: 1; }
         }
 
-        .section {
-            padding: 80px 24px; max-width: 1200px; margin: 0 auto;
-            position: relative; z-index: 2;
-        }
+        .section { padding: 80px 24px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 2; }
         .section-label {
             font-family: 'Press Start 2P', monospace; font-size: 9px; color: var(--purple-light);
             letter-spacing: 4px; text-transform: uppercase; margin-bottom: 12px;
@@ -283,17 +274,12 @@
             background: linear-gradient(90deg, var(--purple-primary), transparent);
         }
         .section-label::after { background: linear-gradient(270deg, var(--purple-primary), transparent); }
-        
         .section-title {
-            font-family: 'VT323', monospace;
-            font-size: clamp(42px, 6vw, 72px);
-            line-height: 1.1;
-            margin-bottom: 12px;
-            color: var(--text-white);
+            font-family: 'VT323', monospace; font-size: clamp(42px, 6vw, 72px);
+            line-height: 1.1; margin-bottom: 12px; color: var(--text-white);
             text-shadow: 0 0 20px var(--purple-glow), 0 0 40px rgba(139, 92, 246, 0.2);
             letter-spacing: 2px;
         }
-        
         .section-subtitle { color: var(--text-muted); font-size: 15px; max-width: 480px; line-height: 1.7; }
         .section-header { margin-bottom: 56px; }
 
@@ -379,15 +365,15 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         .fetch-fallback { font-family: 'Inter', sans-serif; font-size: 11px; color: var(--text-muted); font-style: italic; }
 
-        .about-container { max-width: 700px; margin: 0 auto; text-align: center; }
+        .about-container { max-width: 800px; margin: 0 auto; }
         .about-text-center h3 { font-size: 22px; font-weight: 800; margin-bottom: 18px; line-height: 1.4; }
         .about-text-center h3 span {
             background: linear-gradient(135deg, var(--purple-light), #c084fc);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
-        .about-text-center p {
-            color: var(--text-light); font-size: 15px; line-height: 1.9; margin-bottom: 36px;
-            max-width: 600px; margin-left: auto; margin-right: auto;
+        .about-text-center .about-description {
+            color: var(--text-light); font-size: 16px; line-height: 1.9;
+            margin-bottom: 36px; text-align: left; white-space: pre-line;
         }
         .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         .about-stat {
@@ -480,79 +466,10 @@
         }
         .btn-server:hover { transform: translateY(-3px); box-shadow: 0 8px 25px var(--emerald-glow); }
 
-        .ogloszenia-list { display: flex; flex-direction: column; gap: 16px; max-width: 800px; margin: 0 auto; }
-        .ogloszenie-item {
-            background: var(--bg-card); border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg); padding: 24px 28px;
-            backdrop-filter: blur(12px); position: relative; overflow: hidden;
-            transition: all 0.4s var(--ease-spring);
-            animation: ogloszenieSlideIn 0.5s var(--ease-spring);
-        }
-        @keyframes ogloszenieSlideIn {
-            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        .ogloszenie-item::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%;
-            background: linear-gradient(180deg, var(--purple-light), var(--purple-primary));
-            border-radius: 0 2px 2px 0;
-        }
-        .ogloszenie-item:hover {
-            border-color: var(--glass-border-hover);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.3), 0 0 15px var(--purple-glow);
-            transform: translateX(4px);
-        }
-        .ogloszenie-date {
-            font-size: 11px; font-weight: 600; color: var(--text-muted);
-            margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
-        }
-        .ogloszenie-date i { color: var(--purple-light); font-size: 12px; }
-        .ogloszenie-text { font-size: 15px; color: var(--text-light); line-height: 1.8; white-space: pre-wrap; word-break: break-word; }
-        .ogloszenie-empty { text-align: center; padding: 60px 24px; color: var(--text-muted); }
-        .ogloszenie-empty i { font-size: 48px; color: var(--glass-border); margin-bottom: 16px; display: block; }
-        .ogloszenie-empty p { font-size: 15px; line-height: 1.6; }
-        .ogloszenie-delete-btn {
-            position: absolute; top: 12px; right: 12px; width: 32px; height: 32px;
-            border-radius: 50%; background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444;
-            cursor: pointer; display: none; align-items: center; justify-content: center;
-            font-size: 14px; transition: all 0.3s var(--ease-spring);
-            z-index: 10;
-        }
-        body.admin-active .ogloszenie-delete-btn { display: flex; }
-        .ogloszenie-delete-btn:hover { 
-            background: rgba(239, 68, 68, 0.3); 
-            transform: scale(1.15);
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
-        }
-        .ogloszenie-delete-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .ogloszenie-loading {
-            text-align: center; padding: 40px 24px; color: var(--text-muted);
-        }
-        .ogloszenie-loading .loading-spinner {
-            width: 32px; height: 32px; border-width: 3px;
-        }
-        .ogloszenie-loading p { margin-top: 12px; font-size: 14px; }
-
-        .ogloszenie-error {
-            text-align: center; padding: 40px 24px; color: #fca5a5;
-            background: rgba(239, 68, 68, 0.08);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            border-radius: var(--radius-lg);
-        }
-        .ogloszenie-error i { font-size: 36px; margin-bottom: 12px; display: block; }
-
         .secret-trigger {
             position: fixed; bottom: 0; left: 0;
             width: 15px; height: 15px;
-            background: transparent;
-            z-index: 9999;
-            cursor: default;
+            background: transparent; z-index: 9999; cursor: default;
         }
 
         .admin-modal-overlay {
@@ -563,13 +480,10 @@
         }
         .admin-modal-overlay.active { display: flex; animation: modalFadeIn 0.4s var(--ease-out-expo); }
         @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
-
         .admin-modal {
             background: linear-gradient(135deg, rgba(14, 9, 30, 0.98), rgba(20, 14, 45, 0.98));
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-xl);
-            padding: 40px; width: 90%; max-width: 480px;
-            position: relative;
+            border: 1px solid var(--glass-border); border-radius: var(--radius-xl);
+            padding: 40px; width: 90%; max-width: 480px; position: relative;
             box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px var(--purple-glow);
             animation: modalSlideIn 0.5s var(--ease-spring);
         }
@@ -577,7 +491,6 @@
             from { transform: translateY(30px) scale(0.95); opacity: 0; }
             to { transform: translateY(0) scale(1); opacity: 1; }
         }
-
         .admin-modal-close {
             position: absolute; top: 16px; right: 16px;
             width: 32px; height: 32px; border-radius: 50%;
@@ -587,10 +500,8 @@
             font-size: 14px; transition: all 0.3s var(--ease-spring);
         }
         .admin-modal-close:hover { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: #ef4444; transform: scale(1.1); }
-
         .admin-modal h3 {
-            font-family: 'VT323', monospace;
-            font-size: 28px;
+            font-family: 'VT323', monospace; font-size: 28px;
             color: var(--purple-light); margin-bottom: 8px;
             text-shadow: 0 0 10px var(--purple-glow);
         }
@@ -621,9 +532,7 @@
             color: var(--text-white); box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
         }
         .admin-modal .modal-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139, 92, 246, 0.5); }
-        .admin-modal .modal-btn-primary:disabled {
-            opacity: 0.5; cursor: not-allowed; transform: none;
-        }
+        .admin-modal .modal-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         .admin-modal .modal-btn-danger {
             background: linear-gradient(135deg, #ef4444, #dc2626);
             color: var(--text-white); box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
@@ -655,8 +564,7 @@
         .admin-modal .firebase-status {
             display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
             background: rgba(255, 165, 0, 0.1); border: 1px solid rgba(255, 165, 0, 0.2);
-            border-radius: 50px; font-size: 10px; font-weight: 600; color: #fbbf24;
-            margin-bottom: 16px;
+            border-radius: 50px; font-size: 10px; font-weight: 600; color: #fbbf24; margin-bottom: 16px;
         }
         .admin-modal .firebase-status .status-dot {
             width: 6px; height: 6px; background: #fbbf24; border-radius: 50%;
@@ -681,20 +589,6 @@
         }
         .tab-transition-overlay.animating::before { transform: scaleX(1); }
 
-        .floating-shapes {
-            position: fixed; top: 72px; left: 0; width: 100%;
-            height: calc(100% - 72px); pointer-events: none; z-index: 0; overflow: hidden;
-        }
-        .floating-shape {
-            position: absolute; border: 1px solid rgba(139, 92, 246, 0.1);
-            border-radius: 4px; animation: floatShape linear infinite;
-        }
-        @keyframes floatShape {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; } 90% { opacity: 0.8; }
-            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
-        }
-
         @media (max-width: 1024px) { .sociale-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 768px) {
             .nav-tabs {
@@ -712,33 +606,29 @@
             .about-stats { grid-template-columns: 1fr; }
             .kontakt-grid { grid-template-columns: 1fr; }
             .section { padding: 60px 20px; }
-            .bg-orb { opacity: 0.2; }
             .admin-modal { padding: 28px 20px; }
+            .bg-center-image { width: 320px; opacity: 0.1; }
         }
         @media (max-width: 480px) {
             .hero-buttons { flex-direction: column; width: 100%; max-width: 280px; margin: 0 auto; }
             .btn { justify-content: center; width: 100%; }
+            .nav-logo-img { width: 30px; height: 30px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-grid"></div>
-    <div class="bg-orbs">
-        <div class="bg-orb"></div>
-        <div class="bg-orb"></div>
-        <div class="bg-orb"></div>
-    </div>
+    <div class="bg-static"></div>
+    <div class="bg-grid-overlay"></div>
+    <img src="https://files.catbox.moe/x1jt1j.png" alt="" class="bg-center-image">
+    <div class="particles-container" id="particlesContainer"></div>
 
-    <div class="floating-shapes" id="floatingShapes"></div>
     <div class="tab-transition-overlay" id="tabOverlay"></div>
-
     <div class="secret-trigger" id="secretTrigger" title=""></div>
 
     <div class="admin-modal-overlay" id="adminModal">
         <div class="admin-modal">
             <button class="admin-modal-close" id="adminModalClose"><i class="fas fa-times"></i></button>
-
             <div id="loginView">
                 <h3><i class="fas fa-shield-alt"></i> Panel Administratora</h3>
                 <p class="modal-subtitle">Zaloguj się, aby zarządzać ogłoszeniami</p>
@@ -755,7 +645,6 @@
                     <i class="fas fa-sign-in-alt"></i> Zaloguj się
                 </button>
             </div>
-
             <div id="publishView" style="display: none;">
                 <h3><i class="fas fa-bullhorn"></i> Panel Ogłoszeń</h3>
                 <div class="admin-badge"><i class="fas fa-check-circle"></i> Zalogowano jako: Koks50</div>
@@ -781,25 +670,14 @@
     <nav class="navbar" id="navbar">
         <div class="nav-inner">
             <div class="nav-logo" id="logoBtn">
-                <div class="logo-icon"><i class="fas fa-cube"></i></div>
+                <img src="https://files.catbox.moe/x1jt1j.png" alt="Koksix" class="nav-logo-img">
                 KOKSIX<span style="color:var(--purple-light)">.PL</span>
             </div>
             <div class="nav-tabs" id="navTabs">
-                <button class="nav-tab active" data-tab="home">
-                    <i class="fas fa-home tab-icon"></i> Strona Główna
-                </button>
-                <button class="nav-tab" data-tab="sociale">
-                    <i class="fas fa-share-alt tab-icon"></i> Sociale
-                </button>
-                <button class="nav-tab" data-tab="ogloszenia">
-                    <i class="fas fa-bullhorn tab-icon"></i> Ogłoszenia
-                </button>
-                <button class="nav-tab" data-tab="omnie">
-                    <i class="fas fa-user tab-icon"></i> O Mnie
-                </button>
-                <button class="nav-tab" data-tab="kontakt">
-                    <i class="fas fa-envelope tab-icon"></i> Kontakt
-                </button>
+                <button class="nav-tab active" data-tab="home"><i class="fas fa-home tab-icon"></i> Strona Główna</button>
+                <button class="nav-tab" data-tab="sociale"><i class="fas fa-share-alt tab-icon"></i> Sociale</button>
+                <button class="nav-tab" data-tab="omnie"><i class="fas fa-user tab-icon"></i> O Mnie</button>
+                <button class="nav-tab" data-tab="kontakt"><i class="fas fa-envelope tab-icon"></i> Kontakt</button>
             </div>
             <button class="nav-hamburger" id="navToggle" aria-label="Menu">
                 <span></span><span></span><span></span>
@@ -808,7 +686,6 @@
     </nav>
 
     <div class="tab-page active" id="tab-home">
-        <canvas class="tab-canvas-bg" id="canvas-home"></canvas>
         <section class="hero">
             <div class="hero-content">
                 <div class="hero-badge"><span class="pulse-dot"></span> Witaj na mojej stronie!</div>
@@ -824,7 +701,6 @@
     </div>
 
     <div class="tab-page" id="tab-sociale">
-        <canvas class="tab-canvas-bg" id="canvas-sociale"></canvas>
         <section class="section">
             <div class="section-header">
                 <div class="section-label"><span>Moje Sociale</span></div>
@@ -891,34 +767,32 @@
         </section>
     </div>
 
-    <div class="tab-page" id="tab-ogloszenia">
-        <canvas class="tab-canvas-bg" id="canvas-ogloszenia"></canvas>
-        <section class="section">
-            <div class="section-header">
-                <div class="section-label"><span>Ogłoszenia</span></div>
-                <h2 class="section-title">Tablica Ogłoszeń</h2>
-                <p class="section-subtitle">Najnowsze informacje i ogłoszenia od Koksixa!</p>
-            </div>
-            <div class="ogloszenia-list" id="ogloszeniaList">
-                <div class="ogloszenie-loading">
-                    <div class="loading-spinner"></div>
-                    <p>Ładowanie ogłoszeń...</p>
-                </div>
-            </div>
-        </section>
-    </div>
-
     <div class="tab-page" id="tab-omnie">
-        <canvas class="tab-canvas-bg" id="canvas-omnie"></canvas>
         <section class="section">
             <div class="section-header">
                 <div class="section-label"><span>O Mnie</span></div>
-                <h2 class="section-title">Cześć! Jestem Koksix</h2>
+                <h2 class="section-title">Kim jestem?</h2>
             </div>
             <div class="about-container">
                 <div class="about-text-center">
-                    <h3>Tworzę treści związane z <span>Minecraftem</span></h3>
-                    <p>Cześć, tu Koksix!<br><br>Tworzę treści związane z Minecraftem i regularnie prowadzę transmisje na żywo na TikToku. Gram razem z widzami na różnych serwerach pełnych eventów, wyzwań i ciekawych przygód. Organizuję także własne eventy na moim serwerze, gdzie każdy może dołączyć i świetnie się bawić.<br><br>Jeśli lubisz Minecrafta, wspólną grę i aktywną społeczność, jesteś we właściwym miejscu. Do zobaczenia na live!</p>
+                    <h3>Poznaj <span>Koksixa</span></h3>
+                    <div class="about-description">Siemanko ja jestem Koksix!
+
+Witam w moim świecie miejscu które powstało z pasji do gier internetu i ludzi którzy lubią wspólnie coś tworzyć i mieć z tego fun :D
+
+Jeśli tu jesteś to pewnie chcesz wiedzieć kim jestem i o co tu chodzi więc już tłumaczę..
+
+Gry są ze mną od zawsze ale Minecraft to totalnie inny poziom to nie jest dla mnie zwykła gra tylko cały świat w którym człowiek może robić wielkie rzeczy rozwijać kreatywność budować swoje pomysły i tworzyć coś od zera dla mnie to gra życia gram w nią już od 13 lat i dalej potrafi mnie zaskoczyć!
+
+Zanim zacząłem streamować siedziałem w internecie od dawna robiłem różne projekty organizowałem eventy dla społeczności i zawsze kręciło mnie łączenie ludzi i tworzenie wspólnych akcji.
+
+Teraz działam jako streamer głównie na Tiktoku i tam rozwijam swoją społeczność razem z ekipą mamy też własnego discorda gdzie wszystko się dzieje i gdzie spotykamy się na co dzień.
+
+Na streamach nie chodzi tylko o granie chodzi o klimat wspólne granie śmiech rywalizację eventy i budowanie społeczności która naprawdę coś znaczy :0
+
+To dopiero początek naszej drogi i wszystko się tu dopiero rozkręca mamy masę planów i pomysłów i jeśli tu jesteś od początku to serio fajnie bo możesz być częścią tego od samego startu!
+
+Rozgość się i zostań na dłużej bo najlepsze dopiero przed nami :P</div>
                     <div class="about-stats">
                         <div class="about-stat"><i class="fas fa-gamepad"></i><div><div class="stat-label">Pasja</div><div class="stat-value">Minecraft</div></div></div>
                         <div class="about-stat"><i class="fas fa-heart"></i><div><div class="stat-label">Społeczność</div><div class="stat-value">Najważniejsza!</div></div></div>
@@ -931,7 +805,6 @@
     </div>
 
     <div class="tab-page" id="tab-kontakt">
-        <canvas class="tab-canvas-bg" id="canvas-kontakt"></canvas>
         <section class="section">
             <div class="section-header">
                 <div class="section-label"><span>Kontakt</span></div>
@@ -981,32 +854,47 @@
         let isTransitioning = false;
         let isAdminLoggedIn = false;
         let ogloszeniaData = [];
-        let isFirebaseLoading = false;
+
+        function createParticles() {
+            const container = document.getElementById('particlesContainer');
+            const particleCount = 35;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = Math.random() * 100 + '%';
+                const size = Math.random() * 2 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                const duration = Math.random() * 7 + 8;
+                particle.style.animationDuration = duration + 's';
+                const delay = Math.random() * 10;
+                particle.style.animationDelay = delay + 's';
+                const hue = 260 + Math.random() * 30;
+                particle.style.background = `hsl(${hue}, 80%, 70%)`;
+                particle.style.boxShadow = `0 0 ${size * 2}px hsla(${hue}, 80%, 70%, 0.6)`;
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
 
         function switchTab(tabName) {
             if (tabName === currentTab || isTransitioning) return;
             isTransitioning = true;
-
             const oldPage = document.getElementById('tab-' + currentTab);
             const newPage = document.getElementById('tab-' + tabName);
             const overlay = document.getElementById('tabOverlay');
-
             document.querySelectorAll('.nav-tab').forEach(tab => {
                 tab.classList.toggle('active', tab.getAttribute('data-tab') === tabName);
             });
-
             oldPage.classList.remove('active');
             oldPage.classList.add('anim-out');
             overlay.classList.add('active', 'animating');
-
             setTimeout(() => {
                 oldPage.classList.remove('anim-out');
                 oldPage.style.display = 'none';
-
                 newPage.style.display = 'block';
                 newPage.classList.add('active', 'anim-in');
                 newPage.scrollTop = 0;
-
                 setTimeout(() => {
                     newPage.classList.remove('anim-in');
                     overlay.classList.remove('animating');
@@ -1014,16 +902,11 @@
                     currentTab = tabName;
                     isTransitioning = false;
                 }, 600);
-
                 if (tabName === 'sociale' && !countersStarted) {
                     countersStarted = true;
                     runCounters();
                 }
-                if (tabName === 'ogloszenia') {
-                    loadAndRenderOgloszenia();
-                }
             }, 300);
-
             document.getElementById('navTabs').classList.remove('open');
             document.getElementById('navToggle').classList.remove('open');
         }
@@ -1039,151 +922,24 @@
 
         const navbar = document.getElementById('navbar');
         const navToggle = document.getElementById('navToggle');
-
         navToggle.addEventListener('click', () => {
             navToggle.classList.toggle('open');
             document.getElementById('navTabs').classList.toggle('open');
         });
-
         window.addEventListener('scroll', () => {
             navbar.classList.toggle('scrolled', window.scrollY > 50);
         });
 
-        const tabCanvases = {
-            home: document.getElementById('canvas-home'),
-            sociale: document.getElementById('canvas-sociale'),
-            ogloszenia: document.getElementById('canvas-ogloszenia'),
-            omnie: document.getElementById('canvas-omnie'),
-            kontakt: document.getElementById('canvas-kontakt')
-        };
-
-        function initTabCanvas(tabName, canvas) {
-            if (!canvas) return;
-            const parent = canvas.parentElement;
-            canvas.width = parent.offsetWidth;
-            canvas.height = parent.offsetHeight;
-            const ctx = canvas.getContext('2d');
-            const parts = [];
-            const particleCount = tabName === 'home' ? 40 : 25;
-
-            class TabParticle {
-                constructor() { this.reset(true); }
-                reset(initial) {
-                    this.x = Math.random() * canvas.width;
-                    this.y = initial ? Math.random() * canvas.height : canvas.height + 10;
-                    this.size = Math.random() * 2 + 0.5;
-                    this.speedY = -(Math.random() * 0.5 + 0.1);
-                    this.speedX = (Math.random() - 0.5) * 0.25;
-                    this.opacity = Math.random() * 0.5 + 0.15;
-                    this.hue = 265 + Math.random() * 30;
-                    this.life = 0;
-                    this.maxLife = Math.random() * 400 + 200;
-                    this.wobble = Math.random() * Math.PI * 2;
-                    this.wobbleSpeed = 0.008 + Math.random() * 0.015;
-                }
-                update() {
-                    this.wobble += this.wobbleSpeed;
-                    this.x += this.speedX + Math.sin(this.wobble) * 0.3;
-                    this.y += this.speedY;
-                    this.life++;
-                    if (this.life > this.maxLife || this.y < -10) this.reset(false);
-                }
-                draw() {
-                    const lr = this.life / this.maxLife;
-                    let alpha = this.opacity;
-                    if (lr < 0.1) alpha *= lr / 0.1;
-                    else if (lr > 0.85) alpha *= (1 - lr) / 0.15;
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fillStyle = `hsla(${this.hue}, 80%, 70%, ${alpha})`;
-                    ctx.fill();
-                }
-            }
-
-            for (let i = 0; i < particleCount; i++) {
-                const p = new TabParticle();
-                p.y = Math.random() * canvas.height;
-                p.life = Math.random() * p.maxLife;
-                parts.push(p);
-            }
-
-            function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                parts.forEach(p => { p.update(); p.draw(); });
-                requestAnimationFrame(animate);
-            }
-            animate();
-        }
-
-        Object.entries(tabCanvases).forEach(([name, canvas]) => initTabCanvas(name, canvas));
-
-        window.addEventListener('resize', () => {
-            Object.entries(tabCanvases).forEach(([name, canvas]) => {
-                if (!canvas) return;
-                const parent = canvas.parentElement;
-                canvas.width = parent.offsetWidth;
-                canvas.height = parent.offsetHeight;
-            });
-        });
-
-        const floatingContainer = document.getElementById('floatingShapes');
-        function createFloatingShape() {
-            const shape = document.createElement('div');
-            shape.classList.add('floating-shape');
-            const size = Math.random() * 20 + 8;
-            shape.style.width = size + 'px';
-            shape.style.height = size + 'px';
-            shape.style.left = Math.random() * 100 + '%';
-            shape.style.borderColor = `rgba(139, 92, 246, ${Math.random() * 0.12 + 0.04})`;
-            shape.style.animationDuration = (Math.random() * 15 + 15) + 's';
-            shape.style.animationDelay = (Math.random() * 10) + 's';
-            if (Math.random() > 0.5) shape.style.borderRadius = '50%';
-            floatingContainer.appendChild(shape);
-            setTimeout(() => { if (shape.parentNode) shape.parentNode.removeChild(shape); }, 30000);
-        }
-        for (let i = 0; i < 12; i++) createFloatingShape();
-        setInterval(createFloatingShape, 3000);
-
-        const mouseOrb = document.createElement('div');
-        mouseOrb.style.cssText = 'position:fixed;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.10),transparent 70%);pointer-events:none;z-index:0;transform:translate(-50%,-50%);top:0;left:0;';
-        document.body.appendChild(mouseOrb);
-
-        let orbX = window.innerWidth / 2;
-        let orbY = window.innerHeight / 2;
-        let targetX = orbX;
-        let targetY = orbY;
-
-        document.addEventListener('mousemove', (e) => {
-            targetX = e.clientX;
-            targetY = e.clientY;
-        });
-
-        function animateOrb() {
-            orbX += (targetX - orbX) * 0.08;
-            orbY += (targetY - orbY) * 0.08;
-            mouseOrb.style.left = orbX + 'px';
-            mouseOrb.style.top = orbY + 'px';
-            requestAnimationFrame(animateOrb);
-        }
-        animateOrb();
-
         async function fetchOgloszeniaFromFirebase() {
             try {
                 const response = await fetch(FIREBASE_URL);
-                if (!response.ok) throw new Error('Firebase error: ' + response.status);
+                if (!response.ok) throw new Error('Firebase error');
                 const data = await response.json();
-                
                 if (!data) return [];
-                
                 const ogloszenia = Object.entries(data).map(([key, value]) => ({
-                    id: key,
-                    text: value.text || '',
-                    date: value.date || '',
-                    timestamp: value.timestamp || 0
+                    id: key, text: value.text || '', date: value.date || '', timestamp: value.timestamp || 0
                 }));
-                
                 ogloszenia.sort((a, b) => b.timestamp - a.timestamp);
-                
                 return ogloszenia;
             } catch (error) {
                 console.error('Błąd pobierania z Firebase:', error);
@@ -1195,33 +951,15 @@
             try {
                 const now = new Date();
                 const formattedDate = now.toLocaleDateString('pl-PL', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
+                    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
                 });
-
-                const newOgloszenie = {
-                    text: text.trim(),
-                    date: formattedDate,
-                    timestamp: Date.now(),
-                    author: 'Koks50'
-                };
-
+                const newOgloszenie = { text: text.trim(), date: formattedDate, timestamp: Date.now(), author: 'Koks50' };
                 const response = await fetch(FIREBASE_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(newOgloszenie)
                 });
-
-                if (!response.ok) throw new Error('Firebase POST error: ' + response.status);
-                
+                if (!response.ok) throw new Error('Firebase POST error');
                 const result = await response.json();
-                console.log('Ogłoszenie dodane do Firebase:', result);
-                
                 return { success: true, id: result.name };
             } catch (error) {
                 console.error('Błąd dodawania do Firebase:', error);
@@ -1232,13 +970,8 @@
         async function deleteOgloszenieFromFirebase(id) {
             try {
                 const deleteUrl = `${FIREBASE_BASE}/ogloszenia/${id}.json`;
-                const response = await fetch(deleteUrl, {
-                    method: 'DELETE'
-                });
-
-                if (!response.ok) throw new Error('Firebase DELETE error: ' + response.status);
-                
-                console.log('Ogłoszenie usunięte z Firebase:', id);
+                const response = await fetch(deleteUrl, { method: 'DELETE' });
+                if (!response.ok) throw new Error('Firebase DELETE error');
                 return true;
             } catch (error) {
                 console.error('Błąd usuwania z Firebase:', error);
@@ -1247,131 +980,36 @@
         }
 
         async function loadAndRenderOgloszenia() {
-            const list = document.getElementById('ogloszeniaList');
-            
-            if (!list) return;
-
-            if (ogloszeniaData.length === 0) {
-                list.innerHTML = `
-                    <div class="ogloszenie-loading">
-                        <div class="loading-spinner"></div>
-                        <p>Ładowanie ogłoszeń z Firebase...</p>
-                    </div>`;
-            }
-
-            try {
-                isFirebaseLoading = true;
-                ogloszeniaData = await fetchOgloszeniaFromFirebase();
-                isFirebaseLoading = false;
-                renderOgloszenia();
-            } catch (error) {
-                isFirebaseLoading = false;
-                list.innerHTML = `
-                    <div class="ogloszenie-error">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <p>Nie udało się pobrać ogłoszeń.<br>Spróbuj ponownie później.</p>
-                    </div>`;
-                console.error('Błąd ładowania ogłoszeń:', error);
-            }
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        function renderOgloszenia() {
-            const list = document.getElementById('ogloszeniaList');
-            
-            if (!list) return;
-
-            if (ogloszeniaData.length === 0) {
-                list.innerHTML = `
-                    <div class="ogloszenie-empty">
-                        <i class="fas fa-bullhorn"></i>
-                        <p>Brak ogłoszeń.<br>Bądź czujny — nowe informacje pojawią się tutaj!</p>
-                    </div>`;
-                return;
-            }
-
-            list.innerHTML = ogloszeniaData.map((og, index) => `
-                <div class="ogloszenie-item">
-                    <button class="ogloszenie-delete-btn" onclick="handleDeleteOgloszenie(${index})" title="Usuń ogłoszenie" data-id="${og.id}">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                    <div class="ogloszenie-date">
-                        <i class="fas fa-calendar-alt"></i> ${escapeHtml(og.date)}
-                    </div>
-                    <div class="ogloszenie-text">${escapeHtml(og.text)}</div>
-                </div>
-            `).join('');
+            try { ogloszeniaData = await fetchOgloszeniaFromFirebase(); }
+            catch (error) { console.error('Błąd ładowania ogłoszeń:', error); }
         }
 
         async function handleAddOgloszenie(text) {
-            if (!isAdminLoggedIn) {
-                console.error('Nie jesteś zalogowany jako administrator');
-                return false;
-            }
-            if (!text || !text.trim()) {
-                console.error('Tekst ogłoszenia jest pusty');
-                return false;
-            }
-
+            if (!isAdminLoggedIn || !text || !text.trim()) return false;
             try {
                 const publishBtn = document.getElementById('publishBtn');
                 const originalText = publishBtn.innerHTML;
                 publishBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publikowanie...';
                 publishBtn.disabled = true;
-
                 await addOgloszenieToFirebase(text);
-
-                await loadAndRenderOgloszenia();
-
                 publishBtn.innerHTML = originalText;
                 publishBtn.disabled = false;
-
-                console.log('Ogłoszenie dodane pomyślnie');
                 return true;
             } catch (error) {
                 const publishBtn = document.getElementById('publishBtn');
                 publishBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Opublikuj';
                 publishBtn.disabled = false;
-
-                console.error('Błąd dodawania ogłoszenia:', error);
                 return false;
             }
         }
 
         window.handleDeleteOgloszenie = async function(index) {
-            if (!isAdminLoggedIn) {
-                return;
-            }
-            
-            if (index < 0 || index >= ogloszeniaData.length) {
-                console.error('Nieprawidłowy indeks:', index);
-                return;
-            }
-
+            if (!isAdminLoggedIn || index < 0 || index >= ogloszeniaData.length) return;
             const ogloszenie = ogloszeniaData[index];
-            const deleteBtn = document.querySelector(`.ogloszenie-delete-btn[data-id="${ogloszenie.id}"]`);
-            
-            if (deleteBtn) {
-                deleteBtn.disabled = true;
-                deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            }
-
             try {
                 await deleteOgloszenieFromFirebase(ogloszenie.id);
                 await loadAndRenderOgloszenia();
-                console.log('Ogłoszenie usunięte pomyślnie');
-            } catch (error) {
-                console.error('Błąd usuwania ogłoszenia:', error);
-                if (deleteBtn) {
-                    deleteBtn.disabled = false;
-                    deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
-                }
-            }
+            } catch (error) { console.error('Błąd usuwania:', error); }
         };
 
         const adminModal = document.getElementById('adminModal');
@@ -1408,32 +1046,18 @@
             }
         }
 
-        function closeAdminModal() {
-            adminModal.classList.remove('active');
-        }
+        function closeAdminModal() { adminModal.classList.remove('active'); }
 
-        secretTrigger.addEventListener('click', () => {
-            openAdminModal();
-        });
-
-        adminModalClose.addEventListener('click', () => {
-            closeAdminModal();
-        });
-
-        adminModal.addEventListener('click', (e) => {
-            if (e.target === adminModal) closeAdminModal();
-        });
-
+        secretTrigger.addEventListener('click', () => { openAdminModal(); });
+        adminModalClose.addEventListener('click', () => { closeAdminModal(); });
+        adminModal.addEventListener('click', (e) => { if (e.target === adminModal) closeAdminModal(); });
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && adminModal.classList.contains('active')) {
-                closeAdminModal();
-            }
+            if (e.key === 'Escape' && adminModal.classList.contains('active')) closeAdminModal();
         });
 
         loginBtn.addEventListener('click', () => {
             const user = loginUserInput.value.trim();
             const pass = loginPassInput.value;
-
             if (user === ADMIN_LOGIN && pass === ADMIN_PASSWORD) {
                 isAdminLoggedIn = true;
                 document.body.classList.add('admin-active');
@@ -1444,10 +1068,7 @@
                 publishSuccess.classList.remove('visible');
                 publishError.classList.remove('visible');
                 setTimeout(() => ogloszenieText.focus(), 300);
-                
-                if (currentTab === 'ogloszenia') {
-                    loadAndRenderOgloszenia();
-                }
+                loadAndRenderOgloszenia();
             } else {
                 loginError.classList.add('visible');
                 loginPassInput.value = '';
@@ -1455,12 +1076,8 @@
             }
         });
 
-        loginPassInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') { e.preventDefault(); loginBtn.click(); }
-        });
-        loginUserInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') { e.preventDefault(); loginPassInput.focus(); }
-        });
+        loginPassInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); loginBtn.click(); } });
+        loginUserInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); loginPassInput.focus(); } });
 
         publishBtn.addEventListener('click', async () => {
             const text = ogloszenieText.value.trim();
@@ -1470,9 +1087,7 @@
                 setTimeout(() => { ogloszenieText.style.borderColor = ''; }, 2000);
                 return;
             }
-
             const success = await handleAddOgloszenie(text);
-            
             if (success) {
                 publishSuccess.classList.add('visible');
                 publishError.classList.remove('visible');
@@ -1486,20 +1101,13 @@
         });
 
         ogloszenieText.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-                e.preventDefault();
-                publishBtn.click();
-            }
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); publishBtn.click(); }
         });
 
         logoutBtn.addEventListener('click', () => {
             isAdminLoggedIn = false;
             document.body.classList.remove('admin-active');
             closeAdminModal();
-            
-            if (currentTab === 'ogloszenia') {
-                loadAndRenderOgloszenia();
-            }
         });
 
         function animateNumber(el, target, duration) {
@@ -1514,38 +1122,162 @@
             requestAnimationFrame(tick);
         }
 
+        // ===== NIEZAWODNE POBIERANIE TIKTOK =====
+        // Cache w localStorage żeby nie spamować API
+        const TIKTOK_CACHE_KEY = 'koksix_tiktok_followers';
+        const TIKTOK_CACHE_TIME = 5 * 60 * 1000; // 5 minut
+
+        function getCachedTiktokFollowers() {
+            try {
+                const cached = localStorage.getItem(TIKTOK_CACHE_KEY);
+                if (!cached) return null;
+                const data = JSON.parse(cached);
+                if (Date.now() - data.timestamp < TIKTOK_CACHE_TIME) {
+                    console.log('TikTok followers z cache:', data.value);
+                    return data.value;
+                }
+            } catch(e) {}
+            return null;
+        }
+
+        function setCachedTiktokFollowers(value) {
+            try {
+                localStorage.setItem(TIKTOK_CACHE_KEY, JSON.stringify({
+                    value: value,
+                    timestamp: Date.now()
+                }));
+            } catch(e) {}
+        }
+
+        async function fetchWithTimeout(url, options = {}, timeout = 10000) {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeout);
+            try {
+                const response = await fetch(url, { ...options, signal: controller.signal });
+                clearTimeout(timeoutId);
+                return response;
+            } catch(e) {
+                clearTimeout(timeoutId);
+                throw e;
+            }
+        }
+
         async function fetchTiktokFollowers() {
-            const targetUrl = 'https://www.tiktok.com/@koksixx_';
-            
-            const proxies = [
-                { url: 'https://api.allorigins.win/get?url=', type: 'allorigins' },
-                { url: 'https://api.codetabs.com/v1/proxy?quest=', type: 'text' },
-                { url: 'https://corsproxy.io/?', type: 'text' }
+            const username = 'koksixx_';
+
+            // Sprawdź cache najpierw
+            const cached = getCachedTiktokFollowers();
+            if (cached !== null) return cached;
+
+            console.log('Pobieranie TikTok followers dla @' + username + '...');
+
+            // METODA 1: TikWM API (główna metoda - najbardziej niezawodna)
+            const tikwmEndpoints = [
+                `https://www.tikwm.com/api/user/info?unique_id=${username}`,
+                `https://tikwm.com/api/user/info?unique_id=${username}`,
+                `https://www.tikwm.com/api/user/posts?unique_id=${username}&count=1&cursor=0`,
             ];
-            
-            for (const proxy of proxies) {
+
+            for (const endpoint of tikwmEndpoints) {
                 try {
-                    const fetchUrl = proxy.url + encodeURIComponent(targetUrl);
-                    const resp = await fetch(fetchUrl, { 
-                        signal: AbortSignal.timeout(15000),
-                        headers: {
-                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+                    console.log('Próba TikWM:', endpoint);
+                    const resp = await fetchWithTimeout(endpoint, {
+                        headers: { 'Accept': 'application/json', 'User-Agent': 'Mozilla/5.0' }
+                    }, 12000);
+                    
+                    if (!resp.ok) {
+                        console.log('TikWM status:', resp.status);
+                        continue;
+                    }
+
+                    const data = await resp.json();
+                    
+                    // Format 1: user/info
+                    if (data && data.code === 0 && data.data && data.data.user) {
+                        const followers = parseInt(data.data.user.followers);
+                        if (!isNaN(followers) && followers > 0) {
+                            console.log('✅ TikWM user/info - followers:', followers);
+                            setCachedTiktokFollowers(followers);
+                            return followers;
                         }
-                    });
-                    
-                    if (!resp.ok) continue;
-                    
-                    let html = '';
-                    if (proxy.type === 'allorigins') { 
-                        const j = await resp.json(); 
-                        html = j.contents || ''; 
-                    } else { 
-                        html = await resp.text(); 
                     }
                     
+                    // Format 2: user/posts (zawiera stats)
+                    if (data && data.code === 0 && data.data && data.data.stats) {
+                        const followers = parseInt(data.data.stats.followerCount || data.data.stats.followers);
+                        if (!isNaN(followers) && followers > 0) {
+                            console.log('✅ TikWM user/posts - followers:', followers);
+                            setCachedTiktokFollowers(followers);
+                            return followers;
+                        }
+                    }
+
+                    // Format 3: alternatywna struktura
+                    if (data && data.data) {
+                        const allData = JSON.stringify(data.data);
+                        const match = allData.match(/"followerCount"\s*:\s*(\d+)/);
+                        if (match) {
+                            const followers = parseInt(match[1]);
+                            if (!isNaN(followers) && followers > 0) {
+                                console.log('✅ TikWM regex - followers:', followers);
+                                setCachedTiktokFollowers(followers);
+                                return followers;
+                            }
+                        }
+                    }
+                } catch(e) {
+                    console.log('TikWM error:', e.message);
+                }
+            }
+
+            // METODA 2: Countik API
+            try {
+                console.log('Próba Countik API...');
+                const resp = await fetchWithTimeout(
+                    `https://countik.com/api/user/info?username=${username}`,
+                    { headers: { 'Accept': 'application/json' } },
+                    10000
+                );
+                if (resp.ok) {
+                    const data = await resp.json();
+                    if (data && data.followers) {
+                        const followers = parseInt(data.followers);
+                        if (!isNaN(followers) && followers > 0) {
+                            console.log('✅ Countik - followers:', followers);
+                            setCachedTiktokFollowers(followers);
+                            return followers;
+                        }
+                    }
+                }
+            } catch(e) {
+                console.log('Countik error:', e.message);
+            }
+
+            // METODA 3: Scraper API przez różne proxy
+            const targetUrl = `https://www.tiktok.com/@${username}`;
+            const proxyUrls = [
+                `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`,
+                `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`,
+                `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`,
+                `https://thingproxy.freeboard.io/fetch/${targetUrl}`,
+            ];
+
+            for (const proxyUrl of proxyUrls) {
+                try {
+                    console.log('Próba proxy:', proxyUrl.substring(0, 50) + '...');
+                    const resp = await fetchWithTimeout(proxyUrl, {
+                        headers: {
+                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                            'Accept': 'text/html,application/xhtml+xml'
+                        }
+                    }, 15000);
+
+                    if (!resp.ok) continue;
+
+                    const html = await resp.text();
                     if (!html || html.length < 500) continue;
-                    
+
+                    // Parsuj SIGI_STATE
                     const sigiMatch = html.match(/<script\s+id="SIGI_STATE"[^>]*>([\s\S]*?)<\/script>/i);
                     if (sigiMatch) {
                         try {
@@ -1556,13 +1288,18 @@
                                     const user = users[key];
                                     if (user && user.stats && user.stats.followerCount) {
                                         const count = parseInt(user.stats.followerCount);
-                                        if (!isNaN(count) && count > 0) return count;
+                                        if (!isNaN(count) && count > 0) {
+                                            console.log('✅ SIGI_STATE - followers:', count);
+                                            setCachedTiktokFollowers(count);
+                                            return count;
+                                        }
                                     }
                                 }
                             }
                         } catch(e) {}
                     }
-                    
+
+                    // Parsuj __UNIVERSAL_DATA_FOR_REHYDRATION__
                     const universalMatch = html.match(/__UNIVERSAL_DATA_FOR_REHYDRATION__\s*=\s*({[\s\S]*?});?\s*<\/script>/i);
                     if (universalMatch) {
                         try {
@@ -1571,33 +1308,19 @@
                                 const scope = universalData.__DEFAULT_SCOPE__;
                                 if (scope['user/detail'] && scope['user/detail'].userInfo && scope['user/detail'].userInfo.stats) {
                                     const count = parseInt(scope['user/detail'].userInfo.stats.followerCount);
-                                    if (!isNaN(count) && count > 0) return count;
-                                }
-                                if (scope['user/profile'] && scope['user/profile'].userInfo && scope['user/profile'].userInfo.stats) {
-                                    const count = parseInt(scope['user/profile'].userInfo.stats.followerCount);
-                                    if (!isNaN(count) && count > 0) return count;
-                                }
-                            }
-                        } catch(e) {}
-                    }
-                    
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    const jsonScripts = doc.querySelectorAll('script[type="application/ld+json"]');
-                    for (const script of jsonScripts) {
-                        try {
-                            const json = JSON.parse(script.textContent);
-                            if (json && json.interactionStatistic) {
-                                for (const stat of json.interactionStatistic) {
-                                    if (stat.interactionType && 
-                                        (stat.interactionType.name === 'Follow' || stat.interactionType === 'Follow')) {
-                                        const count = parseInt(stat.userInteractionCount);
-                                        if (!isNaN(count) && count > 0) return count;
+                                    if (!isNaN(count) && count > 0) {
+                                        console.log('✅ UNIVERSAL_DATA - followers:', count);
+                                        setCachedTiktokFollowers(count);
+                                        return count;
                                     }
                                 }
                             }
                         } catch(e) {}
                     }
+
+                    // Parsuj meta tags
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
                     
                     const metaDesc = doc.querySelector('meta[name="description"]');
                     if (metaDesc) {
@@ -1608,10 +1331,14 @@
                             if (match[2] === 'K' || match[2] === 'k') num *= 1000;
                             else if (match[2] === 'M' || match[2] === 'm') num *= 1000000;
                             num = Math.round(num);
-                            if (!isNaN(num) && num > 0) return num;
+                            if (!isNaN(num) && num > 0) {
+                                console.log('✅ Meta description - followers:', num);
+                                setCachedTiktokFollowers(num);
+                                return num;
+                            }
                         }
                     }
-                    
+
                     const ogDesc = doc.querySelector('meta[property="og:description"]');
                     if (ogDesc) {
                         const text = ogDesc.getAttribute('content') || '';
@@ -1621,19 +1348,22 @@
                             if (match[2] === 'K' || match[2] === 'k') num *= 1000;
                             else if (match[2] === 'M' || match[2] === 'm') num *= 1000000;
                             num = Math.round(num);
-                            if (!isNaN(num) && num > 0) return num;
+                            if (!isNaN(num) && num > 0) {
+                                console.log('✅ OG description - followers:', num);
+                                setCachedTiktokFollowers(num);
+                                return num;
+                            }
                         }
                     }
-                    
+
+                    // Parsuj body text
                     const bodyText = doc.body ? (doc.body.textContent || '') : '';
                     const patterns = [
                         /"followerCount"\s*:\s*(\d+)/,
                         /followerCount["\s:=]+(\d+)/,
                         /([\d,.]+)\s*([KM]?)\s*Followers/i,
-                        /([\d,.]+)\s*([KM]?)\s*obserwujacych/i,
                         /([\d,.]+)\s*([KM]?)\s*followers/i
                     ];
-                    
                     for (const pattern of patterns) {
                         const m = bodyText.match(pattern);
                         if (m) {
@@ -1646,21 +1376,26 @@
                                 else if (m[2] === 'M' || m[2] === 'm') num *= 1000000;
                                 num = Math.round(num);
                             }
-                            if (!isNaN(num) && num > 0 && num < 100000000) return num;
+                            if (!isNaN(num) && num > 0 && num < 100000000) {
+                                console.log('✅ Body text - followers:', num);
+                                setCachedTiktokFollowers(num);
+                                return num;
+                            }
                         }
                     }
-                    
-                } catch(e) { 
-                    continue; 
+                } catch(e) {
+                    console.log('Proxy error:', e.message);
                 }
             }
+
+            console.log('❌ Wszystkie metody zawiodły dla TikTok');
             return 0;
         }
 
         async function fetchYoutubeSubscribers() {
             try {
                 const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.youtube.com/@koksix_99');
-                const resp = await fetch(proxyUrl, { signal: AbortSignal.timeout(10000) });
+                const resp = await fetchWithTimeout(proxyUrl, {}, 10000);
                 if (!resp.ok) throw new Error('HTTP error');
                 const data = await resp.json();
                 if (!data.contents) throw new Error('No contents');
@@ -1693,20 +1428,17 @@
                         if (!isNaN(num) && num > 0) return num;
                     }
                 }
-                const bodyText = doc.body ? (doc.body.textContent || '') : '';
-                const subMatch = bodyText.match(/([\d,.]+)\s*subscribers/i);
-                if (subMatch) {
-                    const num = parseInt(subMatch[1].replace(/,/g, ''));
-                    if (!isNaN(num) && num > 0) return num;
-                }
             } catch(e) {}
             return 0;
         }
 
         async function fetchDiscordMembers() {
             try {
-                const resp = await fetch('https://discord.com/api/v9/invites/c7mtdM59fA?with_counts=true&with_expiration=true',
-                    { headers: { 'Accept': 'application/json' }, signal: AbortSignal.timeout(10000) });
+                const resp = await fetchWithTimeout(
+                    'https://discord.com/api/v9/invites/c7mtdM59fA?with_counts=true&with_expiration=true',
+                    { headers: { 'Accept': 'application/json' } },
+                    10000
+                );
                 if (!resp.ok) throw new Error('HTTP error');
                 const data = await resp.json();
                 if (data && data.approximate_member_count) return data.approximate_member_count;
@@ -1753,8 +1485,6 @@
                 card.addEventListener('mouseleave', () => { card.style.transform = ''; });
             });
         }
-
-        loadAndRenderOgloszenia();
     </script>
 </body>
 </html>
