@@ -366,14 +366,29 @@
         .fetch-fallback { font-family: 'Inter', sans-serif; font-size: 11px; color: var(--text-muted); font-style: italic; }
 
         .about-container { max-width: 800px; margin: 0 auto; }
-        .about-text-center h3 { font-size: 22px; font-weight: 800; margin-bottom: 18px; line-height: 1.4; }
+        .about-text-center h3 { font-size: 24px; font-weight: 800; margin-bottom: 24px; line-height: 1.4; }
         .about-text-center h3 span {
             background: linear-gradient(135deg, var(--purple-light), #c084fc);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
         .about-text-center .about-description {
-            color: var(--text-light); font-size: 16px; line-height: 1.9;
-            margin-bottom: 36px; text-align: left; white-space: pre-line;
+            color: var(--text-light);
+            font-size: 16px;
+            line-height: 1.85;
+            margin-bottom: 36px;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.2px;
+        }
+        .about-text-center .about-description p {
+            margin-bottom: 14px;
+        }
+        .about-text-center .about-description p:last-child {
+            margin-bottom: 0;
+        }
+        .about-text-center .about-description .highlight {
+            color: var(--purple-light);
+            font-weight: 600;
         }
         .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         .about-stat {
@@ -444,7 +459,7 @@
         }
         .server-badge-green {
             display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px;
-            background: rgba(34, 197, 94, 0.08); border: 1px solid rgba(34, 197, 94, 0.2);
+            background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.4);
             border-radius: 50px; font-size: 11px; font-weight: 700; color: var(--emerald); margin-bottom: 16px;
         }
         .server-badge-green .dot {
@@ -455,8 +470,47 @@
             0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
             50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
         }
-        .server-text { color: var(--text-light); font-size: 14px; line-height: 1.7; margin-bottom: 20px; }
+        .server-text { color: var(--text-light); font-size: 14px; line-height: 1.7; margin-bottom: 14px; }
         .server-text strong { color: var(--emerald); }
+        .server-ip-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(6, 3, 16, 0.6);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            margin-bottom: 18px;
+            cursor: pointer;
+            transition: all 0.3s var(--ease-spring);
+        }
+        .server-ip-box:hover {
+            border-color: var(--emerald);
+            background: rgba(6, 3, 16, 0.8);
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
+        }
+        .server-ip-box .ip-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .server-ip-box .ip-address {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            color: var(--emerald);
+            text-shadow: 0 0 10px var(--emerald-glow);
+        }
+        .server-ip-box .copy-icon {
+            margin-left: auto;
+            color: var(--emerald);
+            font-size: 14px;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        .server-ip-box:hover .copy-icon {
+            opacity: 1;
+        }
         .btn-server {
             display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px;
             background: linear-gradient(135deg, #22c55e, #16a34a); color: var(--text-white);
@@ -465,111 +519,6 @@
             text-transform: uppercase; letter-spacing: 0.5px;
         }
         .btn-server:hover { transform: translateY(-3px); box-shadow: 0 8px 25px var(--emerald-glow); }
-
-        .secret-trigger {
-            position: fixed; bottom: 0; left: 0;
-            width: 15px; height: 15px;
-            background: transparent; z-index: 9999; cursor: default;
-        }
-
-        .admin-modal-overlay {
-            position: fixed; inset: 0; z-index: 10001;
-            display: none; align-items: center; justify-content: center;
-            background: rgba(6, 3, 16, 0.85);
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-        }
-        .admin-modal-overlay.active { display: flex; animation: modalFadeIn 0.4s var(--ease-out-expo); }
-        @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .admin-modal {
-            background: linear-gradient(135deg, rgba(14, 9, 30, 0.98), rgba(20, 14, 45, 0.98));
-            border: 1px solid var(--glass-border); border-radius: var(--radius-xl);
-            padding: 40px; width: 90%; max-width: 480px; position: relative;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px var(--purple-glow);
-            animation: modalSlideIn 0.5s var(--ease-spring);
-        }
-        @keyframes modalSlideIn {
-            from { transform: translateY(30px) scale(0.95); opacity: 0; }
-            to { transform: translateY(0) scale(1); opacity: 1; }
-        }
-        .admin-modal-close {
-            position: absolute; top: 16px; right: 16px;
-            width: 32px; height: 32px; border-radius: 50%;
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-            color: var(--text-muted); cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 14px; transition: all 0.3s var(--ease-spring);
-        }
-        .admin-modal-close:hover { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: #ef4444; transform: scale(1.1); }
-        .admin-modal h3 {
-            font-family: 'VT323', monospace; font-size: 28px;
-            color: var(--purple-light); margin-bottom: 8px;
-            text-shadow: 0 0 10px var(--purple-glow);
-        }
-        .admin-modal .modal-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 28px; }
-        .admin-modal .form-group { margin-bottom: 18px; }
-        .admin-modal label {
-            display: block; font-size: 12px; font-weight: 600; color: var(--text-muted);
-            margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        .admin-modal input, .admin-modal textarea {
-            width: 100%; padding: 12px 16px; background: rgba(6, 3, 16, 0.6);
-            border: 1px solid var(--glass-border); border-radius: var(--radius-sm);
-            color: var(--text-white); font-family: 'Inter', sans-serif; font-size: 14px;
-            transition: all 0.3s var(--ease-out-expo); outline: none;
-        }
-        .admin-modal input:focus, .admin-modal textarea:focus {
-            border-color: var(--purple-light); box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
-        }
-        .admin-modal textarea { min-height: 140px; resize: vertical; line-height: 1.6; }
-        .admin-modal .modal-btn {
-            width: 100%; padding: 14px; border-radius: var(--radius-sm);
-            font-size: 13px; font-weight: 700; cursor: pointer; border: none;
-            text-transform: uppercase; letter-spacing: 0.8px;
-            transition: all 0.4s var(--ease-spring); margin-top: 8px;
-        }
-        .admin-modal .modal-btn-primary {
-            background: linear-gradient(135deg, var(--purple-primary), var(--purple-light));
-            color: var(--text-white); box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
-        }
-        .admin-modal .modal-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139, 92, 246, 0.5); }
-        .admin-modal .modal-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-        .admin-modal .modal-btn-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: var(--text-white); box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
-        }
-        .admin-modal .modal-btn-danger:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(239, 68, 68, 0.5); }
-        .admin-modal .modal-error {
-            background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3);
-            border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px;
-            color: #fca5a5; margin-bottom: 16px; display: none;
-        }
-        .admin-modal .modal-error.visible { display: block; animation: shakeError 0.5s var(--ease-spring); }
-        @keyframes shakeError {
-            0%, 100% { transform: translateX(0); } 20% { transform: translateX(-8px); }
-            40% { transform: translateX(8px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(4px); }
-        }
-        .admin-modal .modal-success {
-            background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3);
-            border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px;
-            color: #86efac; margin-bottom: 16px; display: none;
-        }
-        .admin-modal .modal-success.visible { display: block; }
-        .admin-modal .admin-badge {
-            display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px;
-            background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2);
-            border-radius: 50px; font-size: 11px; font-weight: 600; color: var(--emerald); margin-bottom: 20px;
-        }
-        .admin-modal .admin-badge i { font-size: 12px; }
-        .admin-modal .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--glass-border), transparent); margin: 20px 0; }
-        .admin-modal .firebase-status {
-            display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
-            background: rgba(255, 165, 0, 0.1); border: 1px solid rgba(255, 165, 0, 0.2);
-            border-radius: 50px; font-size: 10px; font-weight: 600; color: #fbbf24; margin-bottom: 16px;
-        }
-        .admin-modal .firebase-status .status-dot {
-            width: 6px; height: 6px; background: #fbbf24; border-radius: 50%;
-            animation: pulse 2s ease-in-out infinite;
-        }
 
         .footer { background: rgba(3, 1, 8, 0.95); border-top: 1px solid var(--glass-border); padding: 24px; position: relative; z-index: 2; }
         .footer-inner { max-width: 1200px; margin: 0 auto; text-align: center; }
@@ -606,7 +555,6 @@
             .about-stats { grid-template-columns: 1fr; }
             .kontakt-grid { grid-template-columns: 1fr; }
             .section { padding: 60px 20px; }
-            .admin-modal { padding: 28px 20px; }
             .bg-center-image { width: 320px; opacity: 0.1; }
         }
         @media (max-width: 480px) {
@@ -624,48 +572,6 @@
     <div class="particles-container" id="particlesContainer"></div>
 
     <div class="tab-transition-overlay" id="tabOverlay"></div>
-    <div class="secret-trigger" id="secretTrigger" title=""></div>
-
-    <div class="admin-modal-overlay" id="adminModal">
-        <div class="admin-modal">
-            <button class="admin-modal-close" id="adminModalClose"><i class="fas fa-times"></i></button>
-            <div id="loginView">
-                <h3><i class="fas fa-shield-alt"></i> Panel Administratora</h3>
-                <p class="modal-subtitle">Zaloguj się, aby zarządzać ogłoszeniami</p>
-                <div class="modal-error" id="loginError"><i class="fas fa-exclamation-circle"></i> Nieprawidłowy login lub hasło!</div>
-                <div class="form-group">
-                    <label for="loginUser">Login</label>
-                    <input type="text" id="loginUser" placeholder="Wpisz login..." autocomplete="off" spellcheck="false">
-                </div>
-                <div class="form-group">
-                    <label for="loginPass">Hasło</label>
-                    <input type="password" id="loginPass" placeholder="Wpisz hasło..." autocomplete="off">
-                </div>
-                <button class="modal-btn modal-btn-primary" id="loginBtn">
-                    <i class="fas fa-sign-in-alt"></i> Zaloguj się
-                </button>
-            </div>
-            <div id="publishView" style="display: none;">
-                <h3><i class="fas fa-bullhorn"></i> Panel Ogłoszeń</h3>
-                <div class="admin-badge"><i class="fas fa-check-circle"></i> Zalogowano jako: Koks50</div>
-                <div class="firebase-status"><span class="status-dot"></span> Połączono z Firebase</div>
-                <p class="modal-subtitle">Dodaj nowe ogłoszenie dla społeczności</p>
-                <div class="modal-success" id="publishSuccess"><i class="fas fa-check"></i> Ogłoszenie opublikowane pomyślnie!</div>
-                <div class="modal-error" id="publishError"><i class="fas fa-exclamation-circle"></i> Błąd podczas publikowania!</div>
-                <div class="form-group">
-                    <label for="ogloszenieText">Treść ogłoszenia</label>
-                    <textarea id="ogloszenieText" placeholder="Wpisz treść ogłoszenia..."></textarea>
-                </div>
-                <button class="modal-btn modal-btn-primary" id="publishBtn">
-                    <i class="fas fa-paper-plane"></i> Opublikuj
-                </button>
-                <div class="divider"></div>
-                <button class="modal-btn modal-btn-danger" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt"></i> Wyloguj się
-                </button>
-            </div>
-        </div>
-    </div>
 
     <nav class="navbar" id="navbar">
         <div class="nav-inner">
@@ -739,6 +645,13 @@
                     <div class="sociale-count-label" style="margin-bottom:18px;">Wsparcie</div>
                     <span class="sociale-btn">Wesprzyj</span>
                 </a>
+                <div class="sociale-card card-server" style="opacity: 1; pointer-events: auto;">
+                    <div class="sociale-icon"><i class="fas fa-cube"></i></div>
+                    <div class="sociale-name">Serwer MC</div>
+                    <div class="sociale-handle">Koksix.pl</div>
+                    <div class="sociale-count-label" style="margin-bottom:18px;">IP Serwera</div>
+                    <span class="sociale-btn" style="background: linear-gradient(135deg, #22c55e, #16a34a);">Graj teraz!</span>
+                </div>
                 <div class="sociale-card card-instagram disabled">
                     <div class="sociale-icon"><i class="fab fa-instagram"></i></div>
                     <div class="sociale-name">Instagram</div>
@@ -751,14 +664,6 @@
                     <div class="sociale-icon"><i class="fab fa-twitch"></i></div>
                     <div class="sociale-name">Twitch</div>
                     <div class="sociale-handle">@koksix.pl</div>
-                    <div class="sociale-count"><span class="badge-soon"><i class="fas fa-clock"></i> Wkrótce</span></div>
-                    <div class="sociale-count-label"></div>
-                    <span class="sociale-btn" style="opacity:0.4;">Wkrótce</span>
-                </div>
-                <div class="sociale-card card-server disabled">
-                    <div class="sociale-icon"><i class="fas fa-cube"></i></div>
-                    <div class="sociale-name">Serwer MC</div>
-                    <div class="sociale-handle">Wkrótce dostępny</div>
                     <div class="sociale-count"><span class="badge-soon"><i class="fas fa-clock"></i> Wkrótce</span></div>
                     <div class="sociale-count-label"></div>
                     <span class="sociale-btn" style="opacity:0.4;">Wkrótce</span>
@@ -776,23 +681,16 @@
             <div class="about-container">
                 <div class="about-text-center">
                     <h3>Poznaj <span>Koksixa</span></h3>
-                    <div class="about-description">Siemanko ja jestem Koksix!
-
-Witam w moim świecie miejscu które powstało z pasji do gier internetu i ludzi którzy lubią wspólnie coś tworzyć i mieć z tego fun :D
-
-Jeśli tu jesteś to pewnie chcesz wiedzieć kim jestem i o co tu chodzi więc już tłumaczę..
-
-Gry są ze mną od zawsze ale Minecraft to totalnie inny poziom to nie jest dla mnie zwykła gra tylko cały świat w którym człowiek może robić wielkie rzeczy rozwijać kreatywność budować swoje pomysły i tworzyć coś od zera dla mnie to gra życia gram w nią już od 13 lat i dalej potrafi mnie zaskoczyć!
-
-Zanim zacząłem streamować siedziałem w internecie od dawna robiłem różne projekty organizowałem eventy dla społeczności i zawsze kręciło mnie łączenie ludzi i tworzenie wspólnych akcji.
-
-Teraz działam jako streamer głównie na Tiktoku i tam rozwijam swoją społeczność razem z ekipą mamy też własnego discorda gdzie wszystko się dzieje i gdzie spotykamy się na co dzień.
-
-Na streamach nie chodzi tylko o granie chodzi o klimat wspólne granie śmiech rywalizację eventy i budowanie społeczności która naprawdę coś znaczy :0
-
-To dopiero początek naszej drogi i wszystko się tu dopiero rozkręca mamy masę planów i pomysłów i jeśli tu jesteś od początku to serio fajnie bo możesz być częścią tego od samego startu!
-
-Rozgość się i zostań na dłużej bo najlepsze dopiero przed nami :P</div>
+                    <div class="about-description">
+                        <p>Siemanko, ja jestem <span class="highlight">Koksix</span>! 👋 Witam w moim świecie — miejscu, które powstało z pasji do gier, internetu i ludzi, którzy lubią wspólnie coś tworzyć i mieć z tego fun :D</p>
+                        <p>Jeśli tu jesteś, to pewnie chcesz wiedzieć kim jestem i o co tu chodzi — więc już tłumaczę..</p>
+                        <p>Gry są ze mną od zawsze, ale <span class="highlight">Minecraft</span> to totalnie inny poziom. To nie jest dla mnie zwykła gra — tylko cały świat, w którym człowiek może robić wielkie rzeczy, rozwijać kreatywność, budować swoje pomysły i tworzyć coś od zera. Dla mnie to <span class="highlight">gra życia</span> — gram w nią już od 13 lat i dalej potrafi mnie zaskoczyć! 🎮</p>
+                        <p>Zanim zacząłem streamować, siedziałem w internecie od dawna — robiłem różne projekty, organizowałem eventy dla społeczności i zawsze kręciło mnie łączenie ludzi i tworzenie wspólnych akcji.</p>
+                        <p>Teraz działam jako <span class="highlight">streamer</span> — głównie na TikToku — i tam rozwijam swoją społeczność. Razem z ekipą mamy też własnego Discorda, gdzie wszystko się dzieje i gdzie spotykamy się na co dzień. 💬</p>
+                        <p>Na streamach nie chodzi tylko o granie — chodzi o <span class="highlight">klimat</span>, wspólne granie, śmiech, rywalizację, eventy i budowanie społeczności, która naprawdę coś znaczy :0</p>
+                        <p>To dopiero początek naszej drogi i wszystko się tu dopiero rozkręca — mamy masę planów i pomysłów, i jeśli tu jesteś od początku, to serio fajnie, bo możesz być częścią tego od samego startu! 🚀</p>
+                        <p>Rozgość się i zostań na dłużej, bo <span class="highlight">najlepsze dopiero przed nami</span> :P</p>
+                    </div>
                     <div class="about-stats">
                         <div class="about-stat"><i class="fas fa-gamepad"></i><div><div class="stat-label">Pasja</div><div class="stat-value">Minecraft</div></div></div>
                         <div class="about-stat"><i class="fas fa-heart"></i><div><div class="stat-label">Społeczność</div><div class="stat-value">Najważniejsza!</div></div></div>
@@ -828,9 +726,16 @@ Rozgość się i zostań na dłużej bo najlepsze dopiero przed nami :P</div>
                 </div>
                 <div class="kontakt-card">
                     <div class="kontakt-card-title"><i class="fas fa-cube"></i> Serwer Minecraft</div>
-                    <div class="server-badge-green"><span class="dot"></span> W przygotowaniu</div>
-                    <p class="server-text"><strong>Mój własny serwer Minecraft już wkrótce!</strong><br>Przygotowuję coś specjalnego. Śledźcie social media!</p>
-                    <button class="btn-server"><i class="fas fa-info-circle"></i> Dowiedz się więcej</button>
+                    <div class="server-badge-green"><span class="dot"></span> Serwer aktywny</div>
+                    <div class="server-ip-box" onclick="copyServerIP()">
+                        <div>
+                            <div class="ip-label">IP Serwera</div>
+                            <div class="ip-address" id="serverIpDisplay">Koksix.pl</div>
+                        </div>
+                        <i class="fas fa-copy copy-icon" id="copyIcon"></i>
+                    </div>
+                    <p class="server-text"><strong>Dołącz i graj z nami!</strong><br>Wpadaj na serwer i baw się razem z ekipą! 🎮</p>
+                    <button class="btn-server" onclick="copyServerIP()"><i class="fas fa-copy"></i> Kopiuj IP</button>
                 </div>
             </div>
         </section>
@@ -845,15 +750,8 @@ Rozgość się i zostań na dłużej bo najlepsze dopiero przed nami :P</div>
     </footer>
 
     <script>
-        const ADMIN_LOGIN = 'Koks50';
-        const ADMIN_PASSWORD = 'Koksix12';
-        const FIREBASE_URL = 'https://koksix-default-rtdb.firebaseio.com/ogloszenia.json';
-        const FIREBASE_BASE = 'https://koksix-default-rtdb.firebaseio.com';
-
         let currentTab = 'home';
         let isTransitioning = false;
-        let isAdminLoggedIn = false;
-        let ogloszeniaData = [];
 
         function createParticles() {
             const container = document.getElementById('particlesContainer');
@@ -930,185 +828,25 @@ Rozgość się i zostań na dłużej bo najlepsze dopiero przed nami :P</div>
             navbar.classList.toggle('scrolled', window.scrollY > 50);
         });
 
-        async function fetchOgloszeniaFromFirebase() {
-            try {
-                const response = await fetch(FIREBASE_URL);
-                if (!response.ok) throw new Error('Firebase error');
-                const data = await response.json();
-                if (!data) return [];
-                const ogloszenia = Object.entries(data).map(([key, value]) => ({
-                    id: key, text: value.text || '', date: value.date || '', timestamp: value.timestamp || 0
-                }));
-                ogloszenia.sort((a, b) => b.timestamp - a.timestamp);
-                return ogloszenia;
-            } catch (error) {
-                console.error('Błąd pobierania z Firebase:', error);
-                throw error;
-            }
+        function copyServerIP() {
+            const ip = 'Koksix.pl';
+            navigator.clipboard.writeText(ip).then(() => {
+                const icon = document.getElementById('copyIcon');
+                if (icon) {
+                    icon.className = 'fas fa-check copy-icon';
+                    setTimeout(() => {
+                        icon.className = 'fas fa-copy copy-icon';
+                    }, 2000);
+                }
+            }).catch(() => {
+                const textArea = document.createElement('textarea');
+                textArea.value = ip;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+            });
         }
-
-        async function addOgloszenieToFirebase(text) {
-            try {
-                const now = new Date();
-                const formattedDate = now.toLocaleDateString('pl-PL', {
-                    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
-                });
-                const newOgloszenie = { text: text.trim(), date: formattedDate, timestamp: Date.now(), author: 'Koks50' };
-                const response = await fetch(FIREBASE_URL, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newOgloszenie)
-                });
-                if (!response.ok) throw new Error('Firebase POST error');
-                const result = await response.json();
-                return { success: true, id: result.name };
-            } catch (error) {
-                console.error('Błąd dodawania do Firebase:', error);
-                throw error;
-            }
-        }
-
-        async function deleteOgloszenieFromFirebase(id) {
-            try {
-                const deleteUrl = `${FIREBASE_BASE}/ogloszenia/${id}.json`;
-                const response = await fetch(deleteUrl, { method: 'DELETE' });
-                if (!response.ok) throw new Error('Firebase DELETE error');
-                return true;
-            } catch (error) {
-                console.error('Błąd usuwania z Firebase:', error);
-                throw error;
-            }
-        }
-
-        async function loadAndRenderOgloszenia() {
-            try { ogloszeniaData = await fetchOgloszeniaFromFirebase(); }
-            catch (error) { console.error('Błąd ładowania ogłoszeń:', error); }
-        }
-
-        async function handleAddOgloszenie(text) {
-            if (!isAdminLoggedIn || !text || !text.trim()) return false;
-            try {
-                const publishBtn = document.getElementById('publishBtn');
-                const originalText = publishBtn.innerHTML;
-                publishBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publikowanie...';
-                publishBtn.disabled = true;
-                await addOgloszenieToFirebase(text);
-                publishBtn.innerHTML = originalText;
-                publishBtn.disabled = false;
-                return true;
-            } catch (error) {
-                const publishBtn = document.getElementById('publishBtn');
-                publishBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Opublikuj';
-                publishBtn.disabled = false;
-                return false;
-            }
-        }
-
-        window.handleDeleteOgloszenie = async function(index) {
-            if (!isAdminLoggedIn || index < 0 || index >= ogloszeniaData.length) return;
-            const ogloszenie = ogloszeniaData[index];
-            try {
-                await deleteOgloszenieFromFirebase(ogloszenie.id);
-                await loadAndRenderOgloszenia();
-            } catch (error) { console.error('Błąd usuwania:', error); }
-        };
-
-        const adminModal = document.getElementById('adminModal');
-        const secretTrigger = document.getElementById('secretTrigger');
-        const adminModalClose = document.getElementById('adminModalClose');
-        const loginView = document.getElementById('loginView');
-        const publishView = document.getElementById('publishView');
-        const loginUserInput = document.getElementById('loginUser');
-        const loginPassInput = document.getElementById('loginPass');
-        const loginBtn = document.getElementById('loginBtn');
-        const loginError = document.getElementById('loginError');
-        const publishBtn = document.getElementById('publishBtn');
-        const ogloszenieText = document.getElementById('ogloszenieText');
-        const publishSuccess = document.getElementById('publishSuccess');
-        const publishError = document.getElementById('publishError');
-        const logoutBtn = document.getElementById('logoutBtn');
-
-        function openAdminModal() {
-            adminModal.classList.add('active');
-            if (!isAdminLoggedIn) {
-                loginView.style.display = 'block';
-                publishView.style.display = 'none';
-                loginUserInput.value = '';
-                loginPassInput.value = '';
-                loginError.classList.remove('visible');
-                setTimeout(() => loginUserInput.focus(), 400);
-            } else {
-                loginView.style.display = 'none';
-                publishView.style.display = 'block';
-                ogloszenieText.value = '';
-                publishSuccess.classList.remove('visible');
-                publishError.classList.remove('visible');
-                setTimeout(() => ogloszenieText.focus(), 400);
-            }
-        }
-
-        function closeAdminModal() { adminModal.classList.remove('active'); }
-
-        secretTrigger.addEventListener('click', () => { openAdminModal(); });
-        adminModalClose.addEventListener('click', () => { closeAdminModal(); });
-        adminModal.addEventListener('click', (e) => { if (e.target === adminModal) closeAdminModal(); });
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && adminModal.classList.contains('active')) closeAdminModal();
-        });
-
-        loginBtn.addEventListener('click', () => {
-            const user = loginUserInput.value.trim();
-            const pass = loginPassInput.value;
-            if (user === ADMIN_LOGIN && pass === ADMIN_PASSWORD) {
-                isAdminLoggedIn = true;
-                document.body.classList.add('admin-active');
-                loginError.classList.remove('visible');
-                loginView.style.display = 'none';
-                publishView.style.display = 'block';
-                ogloszenieText.value = '';
-                publishSuccess.classList.remove('visible');
-                publishError.classList.remove('visible');
-                setTimeout(() => ogloszenieText.focus(), 300);
-                loadAndRenderOgloszenia();
-            } else {
-                loginError.classList.add('visible');
-                loginPassInput.value = '';
-                loginPassInput.focus();
-            }
-        });
-
-        loginPassInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); loginBtn.click(); } });
-        loginUserInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); loginPassInput.focus(); } });
-
-        publishBtn.addEventListener('click', async () => {
-            const text = ogloszenieText.value.trim();
-            if (!text) {
-                ogloszenieText.focus();
-                ogloszenieText.style.borderColor = '#ef4444';
-                setTimeout(() => { ogloszenieText.style.borderColor = ''; }, 2000);
-                return;
-            }
-            const success = await handleAddOgloszenie(text);
-            if (success) {
-                publishSuccess.classList.add('visible');
-                publishError.classList.remove('visible');
-                ogloszenieText.value = '';
-                setTimeout(() => { publishSuccess.classList.remove('visible'); }, 3000);
-            } else {
-                publishError.classList.add('visible');
-                publishSuccess.classList.remove('visible');
-                setTimeout(() => { publishError.classList.remove('visible'); }, 3000);
-            }
-        });
-
-        ogloszenieText.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); publishBtn.click(); }
-        });
-
-        logoutBtn.addEventListener('click', () => {
-            isAdminLoggedIn = false;
-            document.body.classList.remove('admin-active');
-            closeAdminModal();
-        });
 
         function animateNumber(el, target, duration) {
             const start = performance.now();
@@ -1122,10 +860,8 @@ Rozgość się i zostań na dłużej bo najlepsze dopiero przed nami :P</div>
             requestAnimationFrame(tick);
         }
 
-        // ===== NIEZAWODNE POBIERANIE TIKTOK =====
-        // Cache w localStorage żeby nie spamować API
         const TIKTOK_CACHE_KEY = 'koksix_tiktok_followers';
-        const TIKTOK_CACHE_TIME = 5 * 60 * 1000; // 5 minut
+        const TIKTOK_CACHE_TIME = 5 * 60 * 1000;
 
         function getCachedTiktokFollowers() {
             try {
@@ -1133,7 +869,6 @@ Rozgość się i zostań na dłużej bo najlepsze dopiero przed nami :P</div>
                 if (!cached) return null;
                 const data = JSON.parse(cached);
                 if (Date.now() - data.timestamp < TIKTOK_CACHE_TIME) {
-                    console.log('TikTok followers z cache:', data.value);
                     return data.value;
                 }
             } catch(e) {}
@@ -1142,10 +877,7 @@ Rozgość się i zostań na dłużej bo najlepsze dopiero przed nami :P</div>
 
         function setCachedTiktokFollowers(value) {
             try {
-                localStorage.setItem(TIKTOK_CACHE_KEY, JSON.stringify({
-                    value: value,
-                    timestamp: Date.now()
-                }));
+                localStorage.setItem(TIKTOK_CACHE_KEY, JSON.stringify({ value: value, timestamp: Date.now() }));
             } catch(e) {}
         }
 
@@ -1164,14 +896,9 @@ Rozgość się i zostań na dłużej bo najlepsze dopiero przed nami :P</div>
 
         async function fetchTiktokFollowers() {
             const username = 'koksixx_';
-
-            // Sprawdź cache najpierw
             const cached = getCachedTiktokFollowers();
             if (cached !== null) return cached;
 
-            console.log('Pobieranie TikTok followers dla @' + username + '...');
-
-            // METODA 1: TikWM API (główna metoda - najbardziej niezawodna)
             const tikwmEndpoints = [
                 `https://www.tikwm.com/api/user/info?unique_id=${username}`,
                 `https://tikwm.com/api/user/info?unique_id=${username}`,
@@ -1180,80 +907,51 @@ Rozgość się i zostań na dłużej bo najlepsze dopiero przed nami :P</div>
 
             for (const endpoint of tikwmEndpoints) {
                 try {
-                    console.log('Próba TikWM:', endpoint);
-                    const resp = await fetchWithTimeout(endpoint, {
-                        headers: { 'Accept': 'application/json', 'User-Agent': 'Mozilla/5.0' }
-                    }, 12000);
-                    
-                    if (!resp.ok) {
-                        console.log('TikWM status:', resp.status);
-                        continue;
-                    }
-
+                    const resp = await fetchWithTimeout(endpoint, { headers: { 'Accept': 'application/json', 'User-Agent': 'Mozilla/5.0' } }, 12000);
+                    if (!resp.ok) continue;
                     const data = await resp.json();
-                    
-                    // Format 1: user/info
                     if (data && data.code === 0 && data.data && data.data.user) {
                         const followers = parseInt(data.data.user.followers);
                         if (!isNaN(followers) && followers > 0) {
-                            console.log('✅ TikWM user/info - followers:', followers);
                             setCachedTiktokFollowers(followers);
                             return followers;
                         }
                     }
-                    
-                    // Format 2: user/posts (zawiera stats)
                     if (data && data.code === 0 && data.data && data.data.stats) {
                         const followers = parseInt(data.data.stats.followerCount || data.data.stats.followers);
                         if (!isNaN(followers) && followers > 0) {
-                            console.log('✅ TikWM user/posts - followers:', followers);
                             setCachedTiktokFollowers(followers);
                             return followers;
                         }
                     }
-
-                    // Format 3: alternatywna struktura
                     if (data && data.data) {
                         const allData = JSON.stringify(data.data);
                         const match = allData.match(/"followerCount"\s*:\s*(\d+)/);
                         if (match) {
                             const followers = parseInt(match[1]);
                             if (!isNaN(followers) && followers > 0) {
-                                console.log('✅ TikWM regex - followers:', followers);
                                 setCachedTiktokFollowers(followers);
                                 return followers;
                             }
                         }
                     }
-                } catch(e) {
-                    console.log('TikWM error:', e.message);
-                }
+                } catch(e) {}
             }
 
-            // METODA 2: Countik API
             try {
-                console.log('Próba Countik API...');
-                const resp = await fetchWithTimeout(
-                    `https://countik.com/api/user/info?username=${username}`,
-                    { headers: { 'Accept': 'application/json' } },
-                    10000
-                );
+                const resp = await fetchWithTimeout(`https://countik.com/api/user/info?username=${username}`, { headers: { 'Accept': 'application/json' } }, 10000);
                 if (resp.ok) {
                     const data = await resp.json();
                     if (data && data.followers) {
                         const followers = parseInt(data.followers);
                         if (!isNaN(followers) && followers > 0) {
-                            console.log('✅ Countik - followers:', followers);
                             setCachedTiktokFollowers(followers);
                             return followers;
                         }
                     }
                 }
-            } catch(e) {
-                console.log('Countik error:', e.message);
-            }
+            } catch(e) {}
 
-            // METODA 3: Scraper API przez różne proxy
             const targetUrl = `https://www.tiktok.com/@${username}`;
             const proxyUrls = [
                 `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`,
@@ -1264,20 +962,13 @@ Rozgość się i zostań na dłużej bo najlepsze dopiero przed nami :P</div>
 
             for (const proxyUrl of proxyUrls) {
                 try {
-                    console.log('Próba proxy:', proxyUrl.substring(0, 50) + '...');
                     const resp = await fetchWithTimeout(proxyUrl, {
-                        headers: {
-                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                            'Accept': 'text/html,application/xhtml+xml'
-                        }
+                        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'Accept': 'text/html,application/xhtml+xml' }
                     }, 15000);
-
                     if (!resp.ok) continue;
-
                     const html = await resp.text();
                     if (!html || html.length < 500) continue;
 
-                    // Parsuj SIGI_STATE
                     const sigiMatch = html.match(/<script\s+id="SIGI_STATE"[^>]*>([\s\S]*?)<\/script>/i);
                     if (sigiMatch) {
                         try {
@@ -1288,18 +979,13 @@ Rozgość się i zostań na dłużej bo najlepsze dopiero przed nami :P</div>
                                     const user = users[key];
                                     if (user && user.stats && user.stats.followerCount) {
                                         const count = parseInt(user.stats.followerCount);
-                                        if (!isNaN(count) && count > 0) {
-                                            console.log('✅ SIGI_STATE - followers:', count);
-                                            setCachedTiktokFollowers(count);
-                                            return count;
-                                        }
+                                        if (!isNaN(count) && count > 0) { setCachedTiktokFollowers(count); return count; }
                                     }
                                 }
                             }
                         } catch(e) {}
                     }
 
-                    // Parsuj __UNIVERSAL_DATA_FOR_REHYDRATION__
                     const universalMatch = html.match(/__UNIVERSAL_DATA_FOR_REHYDRATION__\s*=\s*({[\s\S]*?});?\s*<\/script>/i);
                     if (universalMatch) {
                         try {
@@ -1308,20 +994,14 @@ Rozgość się i zostań na dłużej bo najlepsze dopiero przed nami :P</div>
                                 const scope = universalData.__DEFAULT_SCOPE__;
                                 if (scope['user/detail'] && scope['user/detail'].userInfo && scope['user/detail'].userInfo.stats) {
                                     const count = parseInt(scope['user/detail'].userInfo.stats.followerCount);
-                                    if (!isNaN(count) && count > 0) {
-                                        console.log('✅ UNIVERSAL_DATA - followers:', count);
-                                        setCachedTiktokFollowers(count);
-                                        return count;
-                                    }
+                                    if (!isNaN(count) && count > 0) { setCachedTiktokFollowers(count); return count; }
                                 }
                             }
                         } catch(e) {}
                     }
 
-                    // Parsuj meta tags
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(html, 'text/html');
-                    
                     const metaDesc = doc.querySelector('meta[name="description"]');
                     if (metaDesc) {
                         const text = metaDesc.getAttribute('content') || '';
@@ -1331,14 +1011,9 @@ Rozgość się i zostań na dłużej bo najlepsze dopiero przed nami :P</div>
                             if (match[2] === 'K' || match[2] === 'k') num *= 1000;
                             else if (match[2] === 'M' || match[2] === 'm') num *= 1000000;
                             num = Math.round(num);
-                            if (!isNaN(num) && num > 0) {
-                                console.log('✅ Meta description - followers:', num);
-                                setCachedTiktokFollowers(num);
-                                return num;
-                            }
+                            if (!isNaN(num) && num > 0) { setCachedTiktokFollowers(num); return num; }
                         }
                     }
-
                     const ogDesc = doc.querySelector('meta[property="og:description"]');
                     if (ogDesc) {
                         const text = ogDesc.getAttribute('content') || '';
@@ -1348,47 +1023,27 @@ Rozgość się i zostań na dłużej bo najlepsze dopiero przed nami :P</div>
                             if (match[2] === 'K' || match[2] === 'k') num *= 1000;
                             else if (match[2] === 'M' || match[2] === 'm') num *= 1000000;
                             num = Math.round(num);
-                            if (!isNaN(num) && num > 0) {
-                                console.log('✅ OG description - followers:', num);
-                                setCachedTiktokFollowers(num);
-                                return num;
-                            }
+                            if (!isNaN(num) && num > 0) { setCachedTiktokFollowers(num); return num; }
                         }
                     }
-
-                    // Parsuj body text
                     const bodyText = doc.body ? (doc.body.textContent || '') : '';
-                    const patterns = [
-                        /"followerCount"\s*:\s*(\d+)/,
-                        /followerCount["\s:=]+(\d+)/,
-                        /([\d,.]+)\s*([KM]?)\s*Followers/i,
-                        /([\d,.]+)\s*([KM]?)\s*followers/i
-                    ];
+                    const patterns = [/"followerCount"\s*:\s*(\d+)/, /followerCount["\s:=]+(\d+)/, /([\d,.]+)\s*([KM]?)\s*Followers/i, /([\d,.]+)\s*([KM]?)\s*followers/i];
                     for (const pattern of patterns) {
                         const m = bodyText.match(pattern);
                         if (m) {
                             let num;
-                            if (pattern.source.includes('followerCount')) {
-                                num = parseInt(m[1]);
-                            } else {
+                            if (pattern.source.includes('followerCount')) { num = parseInt(m[1]); }
+                            else {
                                 num = parseFloat(m[1].replace(/,/g, ''));
                                 if (m[2] === 'K' || m[2] === 'k') num *= 1000;
                                 else if (m[2] === 'M' || m[2] === 'm') num *= 1000000;
                                 num = Math.round(num);
                             }
-                            if (!isNaN(num) && num > 0 && num < 100000000) {
-                                console.log('✅ Body text - followers:', num);
-                                setCachedTiktokFollowers(num);
-                                return num;
-                            }
+                            if (!isNaN(num) && num > 0 && num < 100000000) { setCachedTiktokFollowers(num); return num; }
                         }
                     }
-                } catch(e) {
-                    console.log('Proxy error:', e.message);
-                }
+                } catch(e) {}
             }
-
-            console.log('❌ Wszystkie metody zawiodły dla TikTok');
             return 0;
         }
 
@@ -1434,11 +1089,7 @@ Rozgość się i zostań na dłużej bo najlepsze dopiero przed nami :P</div>
 
         async function fetchDiscordMembers() {
             try {
-                const resp = await fetchWithTimeout(
-                    'https://discord.com/api/v9/invites/c7mtdM59fA?with_counts=true&with_expiration=true',
-                    { headers: { 'Accept': 'application/json' } },
-                    10000
-                );
+                const resp = await fetchWithTimeout('https://discord.com/api/v9/invites/c7mtdM59fA?with_counts=true&with_expiration=true', { headers: { 'Accept': 'application/json' } }, 10000);
                 if (!resp.ok) throw new Error('HTTP error');
                 const data = await resp.json();
                 if (data && data.approximate_member_count) return data.approximate_member_count;
