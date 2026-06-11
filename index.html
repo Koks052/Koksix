@@ -366,29 +366,24 @@
         .fetch-fallback { font-family: 'Inter', sans-serif; font-size: 11px; color: var(--text-muted); font-style: italic; }
 
         .about-container { max-width: 800px; margin: 0 auto; }
-        .about-text-center h3 { font-size: 24px; font-weight: 800; margin-bottom: 24px; line-height: 1.4; }
+        .about-text-center h3 { font-size: 24px; font-weight: 800; margin-bottom: 20px; line-height: 1.4; }
         .about-text-center h3 span {
             background: linear-gradient(135deg, var(--purple-light), #c084fc);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
         .about-text-center .about-description {
             color: var(--text-light);
-            font-size: 16px;
-            line-height: 1.85;
-            margin-bottom: 36px;
+            font-size: 15px;
+            line-height: 1.75;
+            margin-bottom: 28px;
             text-align: left;
             font-family: 'Inter', sans-serif;
-            letter-spacing: 0.2px;
         }
         .about-text-center .about-description p {
-            margin-bottom: 14px;
+            margin-bottom: 10px;
         }
         .about-text-center .about-description p:last-child {
             margin-bottom: 0;
-        }
-        .about-text-center .about-description .highlight {
-            color: var(--purple-light);
-            font-weight: 600;
         }
         .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         .about-stat {
@@ -682,14 +677,14 @@
                 <div class="about-text-center">
                     <h3>Poznaj <span>Koksixa</span></h3>
                     <div class="about-description">
-                        <p>Siemanko, ja jestem <span class="highlight">Koksix</span>! 👋 Witam w moim świecie — miejscu, które powstało z pasji do gier, internetu i ludzi, którzy lubią wspólnie coś tworzyć i mieć z tego fun :D</p>
-                        <p>Jeśli tu jesteś, to pewnie chcesz wiedzieć kim jestem i o co tu chodzi — więc już tłumaczę..</p>
-                        <p>Gry są ze mną od zawsze, ale <span class="highlight">Minecraft</span> to totalnie inny poziom. To nie jest dla mnie zwykła gra — tylko cały świat, w którym człowiek może robić wielkie rzeczy, rozwijać kreatywność, budować swoje pomysły i tworzyć coś od zera. Dla mnie to <span class="highlight">gra życia</span> — gram w nią już od 13 lat i dalej potrafi mnie zaskoczyć! 🎮</p>
-                        <p>Zanim zacząłem streamować, siedziałem w internecie od dawna — robiłem różne projekty, organizowałem eventy dla społeczności i zawsze kręciło mnie łączenie ludzi i tworzenie wspólnych akcji.</p>
-                        <p>Teraz działam jako <span class="highlight">streamer</span> — głównie na TikToku — i tam rozwijam swoją społeczność. Razem z ekipą mamy też własnego Discorda, gdzie wszystko się dzieje i gdzie spotykamy się na co dzień. 💬</p>
-                        <p>Na streamach nie chodzi tylko o granie — chodzi o <span class="highlight">klimat</span>, wspólne granie, śmiech, rywalizację, eventy i budowanie społeczności, która naprawdę coś znaczy :0</p>
-                        <p>To dopiero początek naszej drogi i wszystko się tu dopiero rozkręca — mamy masę planów i pomysłów, i jeśli tu jesteś od początku, to serio fajnie, bo możesz być częścią tego od samego startu! 🚀</p>
-                        <p>Rozgość się i zostań na dłużej, bo <span class="highlight">najlepsze dopiero przed nami</span> :P</p>
+                        <p>Siemanko ja jestem Koksix! Witam w moim świecie miejscu które powstało z pasji do gier internetu i ludzi którzy lubią wspólnie coś tworzyć i mieć z tego fun : D</p>
+                        <p>Jeśli tu jesteś to pewnie chcesz wiedzieć kim jestem i o co tu chodzi więc już tłumaczę..</p>
+                        <p>Gry są ze mną od zawsze ale Minecraft to totalnie inny poziom to nie jest dla mnie zwykła gra tylko cały świat w którym człowiek może robić wielkie rzeczy rozwijać kreatywność budować swoje pomysły i tworzyć coś od zera dla mnie to gra życia gram w nią już od 13 lat i dalej potrafi mnie zaskoczyć!</p>
+                        <p>Zanim zacząłem streamować siedziałem w internecie od dawna robiłem różne projekty organizowałem eventy dla społeczności i zawsze kręciło mnie łączenie ludzi i tworzenie wspólnych akcji.</p>
+                        <p>Teraz działam jako streamer głównie na Tiktoku i tam rozwijam swoją społeczność razem z ekipą mamy też własnego discorda gdzie wszystko się dzieje i gdzie spotykamy się na co dzień.</p>
+                        <p>Na streamach nie chodzi tylko o granie chodzi o klimat wspólne granie śmiech rywalizację eventy i budowanie społeczności która naprawdę coś znaczy : 0</p>
+                        <p>To dopiero początek naszej drogi i wszystko się tu dopiero rozkręca mamy masę planów i pomysłów i jeśli tu jesteś od początku to serio fajnie bo możesz być częścią tego od samego startu!</p>
+                        <p>Rozgość się i zostań na dłużej bo najlepsze dopiero przed nami : P</p>
                     </div>
                     <div class="about-stats">
                         <div class="about-stat"><i class="fas fa-gamepad"></i><div><div class="stat-label">Pasja</div><div class="stat-value">Minecraft</div></div></div>
@@ -860,25 +855,48 @@
             requestAnimationFrame(tick);
         }
 
-        const TIKTOK_CACHE_KEY = 'koksix_tiktok_followers';
-        const TIKTOK_CACHE_TIME = 5 * 60 * 1000;
+        // ===== FIREBASE CONFIG =====
+        const FIREBASE_DB_URL = 'https://koksix-default-rtdb.firebaseio.com';
+        const TIKTOK_CACHE_TIME = 5 * 60 * 1000; // 5 minut
 
-        function getCachedTiktokFollowers() {
+        // Odczyt z Firebase
+        async function getFirebaseTiktokFollowers() {
             try {
-                const cached = localStorage.getItem(TIKTOK_CACHE_KEY);
-                if (!cached) return null;
-                const data = JSON.parse(cached);
-                if (Date.now() - data.timestamp < TIKTOK_CACHE_TIME) {
-                    return data.value;
+                const resp = await fetch(`${FIREBASE_DB_URL}/tiktok_followers.json`);
+                if (!resp.ok) return null;
+                const data = await resp.json();
+                if (data && data.value && data.timestamp) {
+                    if (Date.now() - data.timestamp < TIKTOK_CACHE_TIME) {
+                        console.log('✅ TikTok followers z Firebase:', data.value);
+                        return data.value;
+                    }
                 }
-            } catch(e) {}
-            return null;
+                return null;
+            } catch(e) {
+                console.log('Firebase read error:', e);
+                return null;
+            }
         }
 
-        function setCachedTiktokFollowers(value) {
+        // Zapis do Firebase
+        async function setFirebaseTiktokFollowers(value) {
             try {
-                localStorage.setItem(TIKTOK_CACHE_KEY, JSON.stringify({ value: value, timestamp: Date.now() }));
-            } catch(e) {}
+                const resp = await fetch(`${FIREBASE_DB_URL}/tiktok_followers.json`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        value: value,
+                        timestamp: Date.now()
+                    })
+                });
+                if (resp.ok) {
+                    console.log('✅ TikTok followers zapisane do Firebase:', value);
+                } else {
+                    console.log('Firebase write failed:', resp.status);
+                }
+            } catch(e) {
+                console.log('Firebase write error:', e);
+            }
         }
 
         async function fetchWithTimeout(url, options = {}, timeout = 10000) {
@@ -896,8 +914,12 @@
 
         async function fetchTiktokFollowers() {
             const username = 'koksixx_';
-            const cached = getCachedTiktokFollowers();
+            
+            // Najpierw sprawdź Firebase
+            const cached = await getFirebaseTiktokFollowers();
             if (cached !== null) return cached;
+
+            console.log('Pobieranie TikTok followers dla @' + username + '...');
 
             const tikwmEndpoints = [
                 `https://www.tikwm.com/api/user/info?unique_id=${username}`,
@@ -913,14 +935,14 @@
                     if (data && data.code === 0 && data.data && data.data.user) {
                         const followers = parseInt(data.data.user.followers);
                         if (!isNaN(followers) && followers > 0) {
-                            setCachedTiktokFollowers(followers);
+                            await setFirebaseTiktokFollowers(followers);
                             return followers;
                         }
                     }
                     if (data && data.code === 0 && data.data && data.data.stats) {
                         const followers = parseInt(data.data.stats.followerCount || data.data.stats.followers);
                         if (!isNaN(followers) && followers > 0) {
-                            setCachedTiktokFollowers(followers);
+                            await setFirebaseTiktokFollowers(followers);
                             return followers;
                         }
                     }
@@ -930,7 +952,7 @@
                         if (match) {
                             const followers = parseInt(match[1]);
                             if (!isNaN(followers) && followers > 0) {
-                                setCachedTiktokFollowers(followers);
+                                await setFirebaseTiktokFollowers(followers);
                                 return followers;
                             }
                         }
@@ -945,7 +967,7 @@
                     if (data && data.followers) {
                         const followers = parseInt(data.followers);
                         if (!isNaN(followers) && followers > 0) {
-                            setCachedTiktokFollowers(followers);
+                            await setFirebaseTiktokFollowers(followers);
                             return followers;
                         }
                     }
@@ -979,7 +1001,10 @@
                                     const user = users[key];
                                     if (user && user.stats && user.stats.followerCount) {
                                         const count = parseInt(user.stats.followerCount);
-                                        if (!isNaN(count) && count > 0) { setCachedTiktokFollowers(count); return count; }
+                                        if (!isNaN(count) && count > 0) {
+                                            await setFirebaseTiktokFollowers(count);
+                                            return count;
+                                        }
                                     }
                                 }
                             }
@@ -994,7 +1019,10 @@
                                 const scope = universalData.__DEFAULT_SCOPE__;
                                 if (scope['user/detail'] && scope['user/detail'].userInfo && scope['user/detail'].userInfo.stats) {
                                     const count = parseInt(scope['user/detail'].userInfo.stats.followerCount);
-                                    if (!isNaN(count) && count > 0) { setCachedTiktokFollowers(count); return count; }
+                                    if (!isNaN(count) && count > 0) {
+                                        await setFirebaseTiktokFollowers(count);
+                                        return count;
+                                    }
                                 }
                             }
                         } catch(e) {}
@@ -1011,7 +1039,10 @@
                             if (match[2] === 'K' || match[2] === 'k') num *= 1000;
                             else if (match[2] === 'M' || match[2] === 'm') num *= 1000000;
                             num = Math.round(num);
-                            if (!isNaN(num) && num > 0) { setCachedTiktokFollowers(num); return num; }
+                            if (!isNaN(num) && num > 0) {
+                                await setFirebaseTiktokFollowers(num);
+                                return num;
+                            }
                         }
                     }
                     const ogDesc = doc.querySelector('meta[property="og:description"]');
@@ -1023,7 +1054,10 @@
                             if (match[2] === 'K' || match[2] === 'k') num *= 1000;
                             else if (match[2] === 'M' || match[2] === 'm') num *= 1000000;
                             num = Math.round(num);
-                            if (!isNaN(num) && num > 0) { setCachedTiktokFollowers(num); return num; }
+                            if (!isNaN(num) && num > 0) {
+                                await setFirebaseTiktokFollowers(num);
+                                return num;
+                            }
                         }
                     }
                     const bodyText = doc.body ? (doc.body.textContent || '') : '';
@@ -1039,7 +1073,10 @@
                                 else if (m[2] === 'M' || m[2] === 'm') num *= 1000000;
                                 num = Math.round(num);
                             }
-                            if (!isNaN(num) && num > 0 && num < 100000000) { setCachedTiktokFollowers(num); return num; }
+                            if (!isNaN(num) && num > 0 && num < 100000000) {
+                                await setFirebaseTiktokFollowers(num);
+                                return num;
+                            }
                         }
                     }
                 } catch(e) {}
