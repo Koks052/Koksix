@@ -385,6 +385,11 @@
         .about-text-center .about-description p:last-child {
             margin-bottom: 0;
         }
+        .about-text-center .about-description .highlight {
+            color: var(--purple-light);
+            font-weight: 700;
+            text-shadow: 0 0 8px rgba(168, 85, 247, 0.3);
+        }
         .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         .about-stat {
             display: flex; align-items: center; gap: 14px; padding: 16px 18px;
@@ -643,7 +648,7 @@
                 <div class="sociale-card card-server" style="opacity: 1; pointer-events: auto;">
                     <div class="sociale-icon"><i class="fas fa-cube"></i></div>
                     <div class="sociale-name">Serwer MC</div>
-                    <div class="sociale-handle">Koksix.pl</div>
+                    <div class="sociale-handle">koksix.pl</div>
                     <div class="sociale-count-label" style="margin-bottom:18px;">IP Serwera</div>
                     <span class="sociale-btn" style="background: linear-gradient(135deg, #22c55e, #16a34a);">Graj teraz!</span>
                 </div>
@@ -677,14 +682,14 @@
                 <div class="about-text-center">
                     <h3>Poznaj <span>Koksixa</span></h3>
                     <div class="about-description">
-                        <p>Siemanko ja jestem Koksix! Witam w moim świecie miejscu które powstało z pasji do gier internetu i ludzi którzy lubią wspólnie coś tworzyć i mieć z tego fun : D</p>
+                        <p>Siemanko ja jestem <span class="highlight">Koksix</span>! Witam w moim świecie miejscu które powstało z pasji do gier internetu i ludzi którzy lubią wspólnie coś tworzyć i mieć z tego fun : D</p>
                         <p>Jeśli tu jesteś to pewnie chcesz wiedzieć kim jestem i o co tu chodzi więc już tłumaczę..</p>
-                        <p>Gry są ze mną od zawsze ale Minecraft to totalnie inny poziom to nie jest dla mnie zwykła gra tylko cały świat w którym człowiek może robić wielkie rzeczy rozwijać kreatywność budować swoje pomysły i tworzyć coś od zera dla mnie to gra życia gram w nią już od 13 lat i dalej potrafi mnie zaskoczyć!</p>
+                        <p>Gry są ze mną od zawsze ale <span class="highlight">Minecraft</span> to totalnie inny poziom to nie jest dla mnie zwykła gra tylko cały świat w którym człowiek może robić wielkie rzeczy rozwijać kreatywność budować swoje pomysły i tworzyć coś od zera dla mnie to <span class="highlight">gra życia</span> gram w nią już od 13 lat i dalej potrafi mnie zaskoczyć!</p>
                         <p>Zanim zacząłem streamować siedziałem w internecie od dawna robiłem różne projekty organizowałem eventy dla społeczności i zawsze kręciło mnie łączenie ludzi i tworzenie wspólnych akcji.</p>
-                        <p>Teraz działam jako streamer głównie na Tiktoku i tam rozwijam swoją społeczność razem z ekipą mamy też własnego discorda gdzie wszystko się dzieje i gdzie spotykamy się na co dzień.</p>
-                        <p>Na streamach nie chodzi tylko o granie chodzi o klimat wspólne granie śmiech rywalizację eventy i budowanie społeczności która naprawdę coś znaczy : 0</p>
+                        <p>Teraz działam jako <span class="highlight">streamer</span> głównie na Tiktoku i tam rozwijam swoją społeczność razem z ekipą mamy też własnego discorda gdzie wszystko się dzieje i gdzie spotykamy się na co dzień.</p>
+                        <p>Na streamach nie chodzi tylko o granie chodzi o <span class="highlight">klimat</span> wspólne granie śmiech rywalizację eventy i budowanie społeczności która naprawdę coś znaczy : 0</p>
                         <p>To dopiero początek naszej drogi i wszystko się tu dopiero rozkręca mamy masę planów i pomysłów i jeśli tu jesteś od początku to serio fajnie bo możesz być częścią tego od samego startu!</p>
-                        <p>Rozgość się i zostań na dłużej bo najlepsze dopiero przed nami : P</p>
+                        <p>Rozgość się i zostań na dłużej bo <span class="highlight">najlepsze dopiero przed nami</span> : P</p>
                     </div>
                     <div class="about-stats">
                         <div class="about-stat"><i class="fas fa-gamepad"></i><div><div class="stat-label">Pasja</div><div class="stat-value">Minecraft</div></div></div>
@@ -725,7 +730,7 @@
                     <div class="server-ip-box" onclick="copyServerIP()">
                         <div>
                             <div class="ip-label">IP Serwera</div>
-                            <div class="ip-address" id="serverIpDisplay">Koksix.pl</div>
+                            <div class="ip-address" id="serverIpDisplay">koksix.pl</div>
                         </div>
                         <i class="fas fa-copy copy-icon" id="copyIcon"></i>
                     </div>
@@ -824,7 +829,7 @@
         });
 
         function copyServerIP() {
-            const ip = 'Koksix.pl';
+            const ip = 'koksix.pl';
             navigator.clipboard.writeText(ip).then(() => {
                 const icon = document.getElementById('copyIcon');
                 if (icon) {
@@ -855,11 +860,9 @@
             requestAnimationFrame(tick);
         }
 
-        // ===== FIREBASE CONFIG =====
         const FIREBASE_DB_URL = 'https://koksix-default-rtdb.firebaseio.com';
-        const TIKTOK_CACHE_TIME = 5 * 60 * 1000; // 5 minut
+        const TIKTOK_CACHE_TIME = 5 * 60 * 1000;
 
-        // Odczyt z Firebase
         async function getFirebaseTiktokFollowers() {
             try {
                 const resp = await fetch(`${FIREBASE_DB_URL}/tiktok_followers.json`);
@@ -878,7 +881,6 @@
             }
         }
 
-        // Zapis do Firebase
         async function setFirebaseTiktokFollowers(value) {
             try {
                 const resp = await fetch(`${FIREBASE_DB_URL}/tiktok_followers.json`, {
@@ -914,8 +916,6 @@
 
         async function fetchTiktokFollowers() {
             const username = 'koksixx_';
-            
-            // Najpierw sprawdź Firebase
             const cached = await getFirebaseTiktokFollowers();
             if (cached !== null) return cached;
 
